@@ -1,0 +1,427 @@
+<style>
+  /* Custom Styles */
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  .shopee-logo {
+    color: #ee4d2d;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  /* Custom Radio Button Styling */
+  .custom-reason-option {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+    transition: all 0.2s ease;
+  }
+
+  .custom-reason-option:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+  }
+
+  .custom-reason-option input[type="radio"] {
+    margin-top: 0.3rem;
+  }
+
+  .custom-reason-option label {
+    cursor: pointer;
+    padding-left: 0.5rem;
+  }
+
+  /* Upload Box Styling */
+  .upload-box {
+    border: 1px dashed #dee2e6;
+    border-radius: 0.375rem;
+    padding: 1.5rem 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    position: relative;
+    aspect-ratio: 1/1;
+  }
+
+  .upload-box:hover {
+    background-color: #f8f9fa;
+  }
+
+  .upload-box i {
+    font-size: 1.5rem;
+    color: #adb5bd;
+    margin-bottom: 0.5rem;
+  }
+
+  .upload-box span {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+
+  .upload-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  /* Image Preview Styling */
+  .image-preview {
+    position: relative;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    aspect-ratio: 1/1;
+  }
+
+  .image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .image-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .remove-image {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  /* Button Styling */
+  .btn-danger {
+    background-color: #ee4d2d;
+    border-color: #ee4d2d;
+  }
+
+  .btn-danger:hover,
+  .btn-danger:focus {
+    background-color: #d73211;
+    border-color: #d73211;
+  }
+
+  .btn-danger:disabled {
+    background-color: #f8a48b;
+    border-color: #f8a48b;
+  }
+
+  /* Text Colors */
+  .text-danger {
+    color: #ee4d2d !important;
+  }
+</style>
+<header class="bg-white border-bottom shadow-sm py-3">
+  <div class="container">
+    <div class="d-flex align-items-center">
+      <div class="shopee-logo">T7M Sneaker</div>
+      <div class="ms-4 fs-5 fw-medium">Trả Hàng & Hoàn Tiền</div>
+    </div>
+  </div>
+</header>
+<!-- Main Content -->
+<div class="container py-4">
+  <div class="d-flex align-items-center mb-4">
+    <a href="#!donhangcuaban" class="btn btn-link text-secondary p-0 me-2">
+      <i class="bi bi-chevron-left"></i>
+    </a>
+    <h1 class="fs-4 fw-medium mb-0">Yêu cầu Trả hàng/Hoàn tiền</h1>
+  </div>
+
+  <form>
+    <div class="row g-4">
+      <!-- Main Form Column -->
+      <div class="col-lg-8">
+        <!-- Product Information Card -->
+        <table class="table table-bordered bg-white shadow-sm text-center">
+          <thead class="bg-dark text-white">
+            <tr>
+              <th scope="col"><input type="checkbox" ng-model="selectAll" ng-change="toggleAll()"></th>
+              <th scope="col" colspan="2" class="text-center">Sản phẩm</th>
+              <th scope="col">Màu</th>
+              <th scope="col">Size</th>
+              <th scope="col">Chất liệu</th>
+              <th scope="col">Đơn giá</th>
+              <th scope="col">Số lượng</th>
+              <th scope="col">Thành tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="sp in dataSp">
+              <td class="align-middle">
+                <input type="checkbox" ng-model="sp.selected" ng-change="toggleProductSelection(sp)">
+              </td>
+              <td class="align-middle position-relative">
+                <img src="https://localhost:7196/picture/{{sp.urlHinhanh}}" alt="Ảnh sản phẩm" class="rounded"
+                  width="100px">
+              </td>
+              <td class="align-middle" style="width: 20%;">{{sp.tensp}}</td>
+              <td class="align-middle">{{sp.mau}}</td>
+              <td class="align-middle">{{sp.size}}</td>
+              <td class="align-middle">{{sp.chatlieu}}</td>
+              <td class="align-middle">{{sp.giasp| currency:"₫":0 }}</td>
+              <td class="align-middle">
+                <div class="d-flex justify-content-center align-items-center">
+                  <button ng-click="decrease(sp)" type="button" class="btn btn-sm btn-outline-dark"
+                    ng-disabled="sp.soluong <= 1">-</button>
+                  <input type="number" class="form-control text-center mx-2" ng-model="sp.soluong" min="1"
+                    max="{{sp.maxsoluong}}" ng-change="updateQuantity(sp)" ng-blur="validateQuantity(sp)">
+
+                  <button ng-click="increase(sp)" type="button" class="btn btn-sm btn-outline-dark"
+                    ng-disabled="sp.soluong >= sp.maxsoluong">+</button>
+                </div>
+              </td>
+              <td class="align-middle">{{sp.thanhtien | currency:"₫":0}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- Return Reason Card -->
+        <div class="card mb-4">
+          <div class="card-header border-bottom">
+            <h5 class="card-title mb-0">Lý do trả hàng</h5>
+          </div>
+          <div class="card-body">
+            <div class="return-reasons">
+              <div class="form-check custom-reason-option mb-3">
+                <input class="form-check-input" type="radio" ng-model="returnReason" name="returnReason" id="reason1"
+                  value="Hàng lỗi, không hoạt động">
+                <label class="form-check-label w-100" for="reason1">
+                  Hàng lỗi, không hoạt động
+                </label>
+              </div>
+
+              <div class="form-check custom-reason-option mb-3">
+                <input class="form-check-input" type="radio" ng-model="returnReason" name="returnReason" id="reason2"
+                  value="Hàng hết hạn sử dụng">
+                <label class="form-check-label w-100" for="reason2">
+                  Hàng hết hạn sử dụng
+                </label>
+              </div>
+
+              <div class="form-check custom-reason-option mb-3">
+                <input class="form-check-input" type="radio" ng-model="returnReason" name="returnReason" id="reason3"
+                  value="Khác với mô tả">
+                <label class="form-check-label w-100" for="reason3">
+                  Khác với mô tả
+                </label>
+              </div>
+
+              <div class="form-check custom-reason-option mb-3">
+                <input class="form-check-input" type="radio" ng-model="returnReason" name="returnReason" id="reason4"
+                  value="Hàng đã qua sử dụng">
+                <label class="form-check-label w-100" for="reason4">
+                  Hàng đã qua sử dụng
+                </label>
+              </div>
+
+              <div class="form-check custom-reason-option mb-3">
+                <input class="form-check-input" type="radio" ng-model="returnReason" name="returnReason" id="reason5"
+                  value="Hàng giả, nhái">
+                <label class="form-check-label w-100" for="reason5">
+                  Hàng giả, nhái
+                </label>
+              </div>
+
+              <div class="form-check custom-reason-option">
+                <input class="form-check-input" type="radio" ng-model="returnReason" name="returnReason" id="reason6"
+                  value="Hàng nguyên vẹn nhưng không còn như cũ (đã trả nguyên seal, tem, hộp sản phẩm)">
+                <label class="form-check-label w-100" for="reason6">
+                  Hàng nguyên vẹn nhưng không còn như cũ (đã trả nguyên seal, tem, hộp sản phẩm)
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Information Card -->
+        <div class="card mb-4">
+          <div class="card-header border-bottom">
+            <h5 class="card-title mb-0">Thông tin bổ sung</h5>
+          </div>
+          <div class="card-body">
+            <div class="mt-4">
+              <label class="form-label fw-medium">Địa Chỉ Nhận Hàng</label>
+              <div class="d-flex justify-content-between align-items-center">
+                <div style="margin-left: 15px;">
+                  <span id="hovaten" class="fw-bold">...</span> -
+                  <span id="sdt">...</span><br>
+                  <span id="diachi">...</span>
+                  <span class="badge bg-primary-subtle text-success border border-success me-2">Mặc định</span>
+                </div>
+                <div>
+                  <a data-bs-toggle="modal" class="btn btn-outline-secondary" data-bs-target="#exampleModal">Thay Đổi</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <label for="refundMethod" class="form-label fw-medium">Phương thức hoàn tiền:</label>
+              <select class="form-select" id="refundMethod" ng-model="refundMethod">
+                <option disabled selected>Chọn phương thức hoàn tiền</option>
+                <option value="Đổi điểm">Đổi điểm</option>
+                <option value="Thẻ tín dụng/ghi nợ/Tài khoản ngân hàng">Thẻ tín dụng/ghi nợ/Tài khoản ngân hàng</option>
+              </select>
+            </div>
+
+            <!-- Hiển thị khi chọn "Tài khoản ngân hàng" -->
+            <div class="mt-4" ng-show="refundMethod == 'Thẻ tín dụng/ghi nợ/Tài khoản ngân hàng'">
+              <div class="row mb-4">
+                <div class="col">
+                  <label for="bank" class="form-label fw-medium">Ngân hàng</label>
+                  <select class="form-select" id="bank" ng-model="selectedBank"
+        ng-options="nganhang as (nganhang.name + ' (' + nganhang.shortName + ')') for nganhang in ListNganHang track by nganhang.bin">
+    <option disabled value="">Chọn ngân hàng</option>
+</select>
+                </div>
+                <div class="col">
+                  <label for="accountNumber" class="form-label fw-medium">Số tài khoản/Số thẻ</label>
+                  <input type="text" id="accountNumber" class="form-control" ng-model="accountNumber" placeholder="Nhập số tài khoản">
+                </div>
+                <div class="col">
+                  <label for="accountName" class="form-label fw-medium">Tên chủ tài khoản</label>
+                  <input type="text" id="accountName" class="form-control" ng-model="accountName" placeholder="Nhập tên tài khoản">                    
+                </div>
+              </div>
+              
+            </div>
+            <div class="mb-4">
+              <label for="description" class="form-label fw-medium">Mô tả vấn đề</label>
+              <textarea class="form-control" ng-model="mota" id="mota" rows="4"
+                placeholder="Vui lòng mô tả chi tiết vấn đề bạn gặp phải với sản phẩm"></textarea>
+              <div class="form-text">
+                Mô tả càng chi tiết sẽ giúp chúng tôi xử lý yêu cầu của bạn nhanh hơn
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <label class="form-label fw-medium">Bằng chứng (<span>{{imageCount}}</span>/3)</label>
+              <div class="row g-3 mb-2">
+                <!-- Chọn ảnh từ thư viện -->
+                <div class="col-md-3">
+                  <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+                    <i class="bi bi-upload"></i>
+                    <span>Thêm hình ảnh</span>
+                    <input type="file" class="upload-input" multiple accept="image/*" id="fileInput"
+                      onchange="angular.element(this).scope().selectImages(event)" style="display: none;">
+                  </div>
+                </div>
+              </div>
+            
+              <!-- Hiển thị ảnh đã chọn -->
+              <div class="row g-3 mb-2">
+                <div class="col-md-3" ng-repeat="(index, img) in images">
+                  <div class="image-wrapper position-relative">
+                    <img style="width: 100%; height: auto;" ng-src="{{img.url}}" class="image-preview rounded">
+                    <button class="remove-image" ng-click="removeImage(index)">×</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Column -->
+      <div class="col-lg-4">
+        <div class="card sticky-top" style="top: 1rem;">
+          <div class="card-header border-bottom">
+            <h5 class="card-title mb-0">Tóm tắt yêu cầu</h5>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-secondary">Phương án</span>
+                <span class="fw-medium">Trả hàng và Hoàn tiền</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-secondary">Lý do</span>
+                <span class="fw-medium" id="selectedReasonText">
+                  {{ returnReason ? returnReason : 'Chưa có thông tin' }}
+                </span>
+              </div>
+
+              <div class="d-flex justify-content-between">
+                <span class="text-secondary">Hoàn tiền vào</span>
+                <span class="fw-medium" id="selectedRefundMethodText">
+                  {{ refundMethod ? refundMethod : 'Chưa có thông tin' }}
+                </span>
+              </div>
+
+              <hr>
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <span class="fw-medium">Số tiền hoàn lại</span>
+                <span class="fs-4 text-danger fw-medium">{{tongtien | currency:"₫":0}}</span>
+              </div>
+              <button type="submit" class="btn btn-danger w-100 mb-3" ng-click="btnAdd(trahangForm)" id="submitButton">
+                Gửi yêu cầu
+              </button>
+
+              <div class="alert alert-secondary d-flex" role="alert">
+                <i class="bi bi-box-seam me-2"></i>
+                <div>
+                  <p class="small fw-medium mb-1">Lưu ý quan trọng</p>
+                  <p class="small mb-0">
+                    Sau khi gửi yêu cầu, bạn sẽ cần đóng gói sản phẩm và gửi trả lại cho người bán trong vòng 3 ngày.
+                    Shopee sẽ hoàn tiền sau khi người bán xác nhận đã nhận được hàng trả lại.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </form>
+</div>
+<!-- Modal Địa Chỉ -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Thay đổi địa chỉ</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Tùy chọn chọn địa chỉ hoặc thêm mới -->
+        <div class="mb-3">
+          <label for="addressSelect" class="form-label">Chọn Địa Chỉ</label>
+          <select class="form-select" id="addressSelect">
+            <!-- Các tùy chọn sẽ được thêm bằng JavaScript -->
+          </select>
+        </div>
+        <p class="d-inline-flex gap-1">
+          <a class="btn btn-primary" data-bs-toggle="collapse" role="button" aria-expanded="false"
+            aria-controls="collapseExample" id="AddNewAddressExample">
+            Cập Nhật Địa Chỉ
+          </a>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="btnRestoreAddress" style="display: none;">Khôi phục</button>
+        <button type="button" class="btn btn-primary" id="btnSaveAddress">Lưu</button>
+      </div>
+    </div>
+  </div>
+</div>

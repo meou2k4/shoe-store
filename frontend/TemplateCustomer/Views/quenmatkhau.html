@@ -1,0 +1,124 @@
+<div class="forgot-password-wrapper modern-ui" ng-controller="quenmatkhauController">
+    <div class="forgot-password-container">
+        <h2>Quên Mật Khẩu</h2>
+        <p>Nhập email để nhận mã OTP khôi phục mật khẩu.</p>
+        <form ng-submit="sendOtp()">
+            <input type="email" class="form-control" placeholder="Email" ng-model="user.email" required>
+            <button type="submit" class="btn btn-primary" ng-disabled="isCountingDown">
+                {{ isCountingDown ? countdown + 's' : 'Gửi yêu cầu' }}
+            </button>
+        </form>
+        <a href="#!login" class="back-to-login">Quay lại trang đăng nhập</a>
+        <div class="mt-3 text-center" ng-class="{'text-success': successMessage, 'text-danger': errorMessage}">
+            {{ successMessage || errorMessage }}
+        </div>
+    </div>
+
+    <div class="otp-container" ng-show="showOtpForm">
+        <h2>Nhập Mã OTP</h2>
+        <p>Hãy nhập mã OTP vừa được gửi về email của bạn.</p>
+        <form ng-submit="verifyOtp()">
+            <input type="text" class="form-control" placeholder="Nhập mã OTP" ng-model="user.otp" required>
+            <button type="submit" class="btn btn-primary">Xác nhận OTP</button>
+        </form>
+        <div class="resend-otp">
+            <button ng-click="resendOtp()" ng-disabled="isCountingDown" class="btn-secondary">
+                {{ isCountingDown ? 'Gửi lại sau ' + countdown + 's' : 'Gửi lại OTP' }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(to right, #ece9e6, #ffffff);
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+    }
+
+    .forgot-password-wrapper {
+        display: flex;
+        flex-direction: column;
+        max-width: 400px;
+        margin: 40px auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 22px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    p {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        width: 100%;
+        height: 45px;
+        font-size: 14px;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: sandybrown;
+        box-shadow: 0 0 8px rgba(255, 107, 53, 0.3);
+    }
+
+    .btn-primary {
+        background: sandybrown;
+        color: #fff;
+        border: none;
+        font-weight: bold;
+        width: 100%;
+        height: 45px;
+        border-radius: 8px;
+        transition: 0.3s;
+    }
+
+    .btn-primary:hover {
+        background: red;
+    }
+
+    .btn-secondary {
+        background: #333;
+        color: white;
+        border: none;
+        font-weight: bold;
+        width: 100%;
+        height: 45px;
+        border-radius: 8px;
+        transition: 0.3s;
+    }
+
+    .btn-secondary:hover {
+        background: #555;
+    }
+
+    .back-to-login {
+        display: block;
+        margin-top: 15px;
+        font-size: 14px;
+        color: #ff6b35;
+        text-decoration: none;
+    }
+
+    .back-to-login:hover {
+        text-decoration: underline;
+    }
+
+    .resend-otp {
+        margin-top: 15px;
+    }
+</style>

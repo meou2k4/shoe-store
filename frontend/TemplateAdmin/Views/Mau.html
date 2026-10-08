@@ -1,0 +1,132 @@
+<div class="container-fluid">
+    <!-- Header với nút quay lại và tiêu đề -->
+    <div class="d-flex align-items-center mb-4">
+        <button class="btn btn-sm btn-outline-secondary me-3" onclick="history.back()">
+            <i class="fas fa-arrow-left me-1"></i> 
+        </button>
+        <h3 class="mb-0">Quản Lý Màu Sắc</h3>
+    </div>
+
+    <!-- Card chứa toàn bộ nội dung -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Danh Sách Màu</h5>
+            <button class="btn btn-success btn-sm" ng-click="showAddColorModal()">
+                <i class="fas fa-plus me-1"></i> Thêm Màu
+            </button>
+        </div>
+        
+        <div class="card-body">
+            <!-- Modal thêm hoặc cập nhật màu -->
+            <div class="modal fade" id="addColorModal" tabindex="-1" aria-labelledby="addColorModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" ng-if="isModalVisible">
+                        <form name="colorForm" novalidate>
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addColorModalLabel">{{ editingColor ? 'Cập Nhật Màu' : 'Thêm Màu' }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Tên Màu -->
+                                <div class="mb-3">
+                                    <label for="colorName" class="form-label">Tên Màu <span class="text-danger">*</span></label>
+                                    <input type="text" id="colorName" class="form-control" ng-model="newColor.name"
+                                        placeholder="Nhập tên màu" ng-required="true" ng-blur="checkDuplicateColor()"
+                                        name="colorName">
+                                    <div class="text-danger small mt-1" ng-show="colorForm.colorName.$touched && colorForm.colorName.$error.required">
+                                        Tên màu không được để trống!
+                                    </div>
+                                    <div class="text-danger small mt-1" ng-show="duplicateName">
+                                        Tên màu đã tồn tại!
+                                    </div>
+                                </div>
+
+                                <!-- Mã Màu -->
+                                <div class="mb-3">
+                                    <label for="colorCode" class="form-label">Mã Màu <span class="text-danger">*</span></label>
+                                    <div class="d-flex align-items-center">
+                                        <input type="color" id="colorCode" class="form-control form-control-color me-2" 
+                                            ng-model="newColor.colorCode" ng-required="true" 
+                                            ng-blur="checkDuplicateColor()" name="colorCode">
+                                        <input type="text" class="form-control" ng-model="newColor.colorCode" 
+                                            placeholder="#FFFFFF" style="max-width: 120px;">
+                                    </div>
+                                    <div class="text-danger small mt-1" ng-show="colorForm.colorCode.$touched && colorForm.colorCode.$error.required">
+                                        Mã màu không được để trống!
+                                    </div>
+                                    <div class="text-danger small mt-1" ng-show="duplicateColorCode">
+                                        Mã màu đã tồn tại!
+                                    </div>
+                                </div>
+
+                                <!-- Trạng Thái -->
+                                <div class="mb-3 form-check form-switch">
+                                    <input type="checkbox" class="form-check-input" id="colorStatus" 
+                                        ng-model="newColor.status" ng-true-value="0" ng-false-value="2">
+                                    <label class="form-check-label" for="colorStatus">Hoạt động</label>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Đóng</button>
+                                <button class="btn btn-success" ng-click="addColor()"
+                                    ng-disabled="colorForm.$invalid || duplicateName || duplicateColorCode"
+                                    ng-if="!editingColor" data-bs-dismiss="modal">
+                                    <i class="fas fa-save me-1"></i> Lưu
+                                </button>
+                                <button class="btn btn-warning" ng-click="updateColor()"
+                                    ng-disabled="colorForm.$invalid || duplicateName || duplicateColorCode" 
+                                    ng-if="editingColor" data-bs-dismiss="modal">
+                                    <i class="fas fa-sync-alt me-1"></i> Cập nhật
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bảng danh sách màu -->
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th width="25%">Tên Màu</th>
+                            <th width="15%">Mã Màu</th>
+                            <th width="15%">Trạng Thái</th>
+                            <th width="20%">Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="color in colors">
+                            <td>{{ color.name }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div ng-style="{ 'background-color': color.colorCode }" 
+                                        style="width: 30px; height: 30px; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                    <span class="ms-2 small">{{ color.colorCode }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge" ng-class="{'bg-success': color.status === 0, 'bg-secondary': color.status === 2}">
+                                    {{color.status === 0 ? 'Hoạt động' : 'Ngừng hoạt động'}}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-outline-warning btn-sm me-1" ng-click="editColor(color)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" ng-if="color.isUsedInProduct === false"
+                                    ng-click="deleteColor(color)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr ng-if="colors.length === 0">
+                            <td colspan="4" class="text-center text-muted py-3">Không có dữ liệu màu sắc</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

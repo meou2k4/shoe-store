@@ -1,0 +1,98 @@
+<div class="container-fluid">
+    <!-- Header với nút quay lại và tiêu đề -->
+    <div class="d-flex align-items-center mb-4">
+        <button class="btn btn-sm btn-outline-secondary me-3" onclick="history.back()">
+            <i class="fas fa-arrow-left me-1"></i> Quay lại
+        </button>
+        <h3 class="mb-0">Quản Lý Chất Liệu</h3>
+    </div>
+
+    <!-- Card chứa toàn bộ nội dung -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Danh Sách Chất Liệu</h5>
+            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#chatLieuModal" ng-click="resetChatLieu()">
+                <i class="fas fa-plus me-1"></i> Thêm Chất Liệu
+            </button>
+        </div>
+        
+        <div class="card-body">
+            <!-- Bảng danh sách chất liệu -->
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th width="50%">Tên Chất Liệu</th>
+                            <th width="25%">Trạng Thái</th>
+                            <th width="25%">Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="cl in chatLieus">
+                            <td>{{ cl.tenchatlieu }}</td>
+                            <td>
+                                <span class="badge" ng-class="{'bg-success': cl.trangthai === 0, 'bg-secondary': cl.trangthai === 2}">
+                                    {{ cl.trangthai === 0 ? 'Hoạt động' : 'Ngừng hoạt động' }}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-outline-warning btn-sm me-1" data-bs-toggle="modal" 
+                                    data-bs-target="#chatLieuModal" ng-click="editChatLieu(cl)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" ng-click="deleteChatLieu(cl.id)" 
+                                    ng-if="!cl.isUsedInProduct">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr ng-if="chatLieus.length === 0">
+                            <td colspan="3" class="text-center text-muted py-3">Không có dữ liệu chất liệu</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm/Sửa Chất Liệu -->
+<div class="modal fade" id="chatLieuModal" tabindex="-1" aria-labelledby="chatLieuModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ editingChatLieu ? 'Cập Nhật Chất Liệu' : 'Thêm Chất Liệu' }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="tenchatlieu" class="form-label">Tên Chất Liệu <span class="text-danger">*</span></label>
+                    <input type="text" id="tenchatlieu" class="form-control" 
+                           ng-model="newChatLieu.tenchatlieu" 
+                           ng-class="{'is-invalid': formError.tenchatlieu}" 
+                           ng-change="validateChatLieu()" required
+                           placeholder="Nhập tên chất liệu">
+                    <div class="invalid-feedback" ng-show="formError.tenchatlieu">
+                        {{ formError.tenchatlieu }}
+                    </div>
+                </div>
+                <div class="mb-3 form-check form-switch">
+                    <input type="checkbox" class="form-check-input" id="chatLieuStatus" 
+                           ng-model="newChatLieu.trangthai" ng-true-value="0" ng-false-value="2">
+                    <label class="form-check-label" for="chatLieuStatus">Hoạt động</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" ng-click="resetChatLieu()">Đóng</button>
+                <button class="btn btn-primary" ng-click="addChatLieu()" ng-if="!editingChatLieu" 
+                        ng-disabled="!newChatLieu.tenchatlieu || formError.tenchatlieu">
+                    <i class="fas fa-save me-1"></i> Lưu
+                </button>
+                <button class="btn btn-warning" ng-click="updateChatLieu()" ng-if="editingChatLieu"
+                        ng-disabled="!newChatLieu.tenchatlieu || formError.tenchatlieu">
+                    <i class="fas fa-sync-alt me-1"></i> Cập nhật
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

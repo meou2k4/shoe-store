@@ -1,0 +1,418 @@
+<ul class="nav nav-tabs d-flex justify-content-center" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab">
+            Tất cả
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab">
+            Miễn phí
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab">
+            Giá trị lớn
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" type="button" role="tab">
+            Chờ giao hàng
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab5-tab" data-bs-toggle="tab" data-bs-target="#tab5" type="button" role="tab">
+            Hoàn thành
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab6-tab" data-bs-toggle="tab" data-bs-target="#tab6" type="button" role="tab">
+            Đã hủy
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab7-tab" data-bs-toggle="tab" data-bs-target="#tab7" type="button" role="tab">
+            Trả hàng/Hoàn tiền
+        </button>
+    </li>
+</ul>
+<div class="d-flex justify-content-center">
+    <div class="input-group w-50 pt-3">
+        <button class="btn btn-dark" type="button" id="button-addon1"><i class="bi bi-search"></i></button>
+        <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+    </div>
+</div>
+  <!-- Nội Dung Tab -->
+<div class="tab-content mt-3 py-3" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+        <div ng-repeat="x in dataHoaDon" class="mb-3 bg-light">
+          <div class="d-flex flex-row-reverse bd-highlight border-bottom">
+            <div class="p-2 bd-highlight border-start" style="color: orangered;">Hoàn thành</div>
+            <div class="p-2 bd-highlight">
+              <a href="#" class="text-decoration-none text-success">
+                <i class="bi bi-truck"></i> {{x.trangthaiStr}}
+              </a> 
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Giang">
+                <i class="bi bi-question-circle"></i>
+              </a>
+            </div>
+          </div>
+          <div class="row border-bottom py-3"> 
+            <div class="col-3 ps-3">
+              <img src="./Images/1.jpg" width="100%" height="120px">
+            </div>
+            <div class="col-7">
+              <p class="fs-5">Giayf</p>
+              <p class="text-secondary">Phân loại: Da độn - Đen - 38</p>
+              <p>x1</p>
+            </div>
+            <div class="col-2 d-flex justify-content-center align-items-center">
+              <div class="text-center">
+                  <span class="text-secondary text-decoration-line-through">{{ x.tongtiensanpham | currency:"₫":0 }} </span>
+                  <span style="color: orangered;">{{ x.tongtiencantra | currency:"₫":0 }}0</span>
+              </div>
+            </div>
+          </div>
+          <div class="row py-3">
+            <div class="d-flex flex-column bd-highlight">
+              <div class="p-2 bd-highlight">
+                <div class="text-end">
+                  Thành tiền: <span style="color: orangered; font-size: 24px;">{{ x.tongtiencantra | currency:"₫":0 }}
+                  </span>
+                </div>
+              </div>
+              <div class="p-2 bd-highlight">
+                <div class="d-flex justify-content-between">
+                  <div class="p-2 bd-highlight text-secondary">Đã hủy bởi bạn</div>
+                  <div class="p-2 bd-highlight">
+                    <button class="btn btn-danger">Mua lại</button>
+                    <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#chitietModal">Chi tiết</button>
+                    <a href="tel:0987654321" class="btn btn-outline-dark">Liên hệ người bán</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="tab2" role="tabpanel">
+      <div ng-repeat="x in dataHoaDon" ng-switch="x.trangthaidonhang" class="mb-3 bg-light">
+        
+        <!-- Kiểm tra trạng thái đơn hàng -->
+        <div ng-switch-when="0">
+          <div class="d-flex flex-row-reverse bd-highlight border-bottom">
+            <div class="p-2 bd-highlight border-start text-danger">Hoàn thành</div>
+            <div class="p-2 bd-highlight">
+              <a href="#" class="text-decoration-none text-success">
+                <i class="bi bi-truck"></i> Đơn hàng đang hoàn về cho người gửi
+              </a> 
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Giang">
+                <i class="bi bi-question-circle"></i>
+              </a>
+            </div>
+          </div>
+    
+          <div class="row border-bottom py-3"> 
+            <div class="col-3">
+              <img ng-src="./Images/default.jpg" width="100%" height="120px" alt="Sản phẩm">
+            </div>
+            <div class="col-7">
+              <p class="fs-5">{{x.tenSanPham || 'Tên sản phẩm'}}</p>
+              <p class="text-secondary">Phân loại: {{x.phanLoai || 'Không xác định'}}</p>
+              <p>x{{x.soLuong || 1}}</p>
+            </div>
+            <div class="col-2 d-flex justify-content-center align-items-center">
+              <div class="text-center">
+                <span class="text-secondary text-decoration-line-through" ng-if="x.giaGoc">₫{{x.giaGoc}}</span>
+                <span class="text-danger fw-bold">₫{{x.giaKhuyenMai || x.giaGoc}}</span>
+              </div>
+            </div>
+          </div>
+    
+          <div class="row py-3">
+            <div class="d-flex flex-column bd-highlight">
+              <div class="p-2 bd-highlight text-end">
+                Thành tiền: <span class="text-danger fs-4">₫{{x.giaKhuyenMai || x.giaGoc}}</span>
+              </div>
+              <div class="p-2 bd-highlight">
+                <div class="d-flex justify-content-between">
+                  <div class="p-2 bd-highlight text-secondary">Đã hủy bởi bạn</div>
+                  <div class="p-2 bd-highlight">
+                    <button class="btn btn-danger" ng-click="muaLai(x)">Mua lại</button>
+                    <button class="btn btn-outline-dark" ng-click="xemChiTiet(x)">Chi tiết</button>
+                    <a href="tel:0987654321" class="btn btn-outline-dark">Liên hệ người bán</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="tab3" role="tabpanel">
+      <div ng-repeat="x in dataHoaDon" ng-switch="x.trangthaidonhang" class="mb-3 bg-light">
+        
+        <!-- Kiểm tra trạng thái đơn hàng -->
+        <div ng-switch-when="1">
+          <div class="d-flex flex-row-reverse bd-highlight border-bottom">
+            <div class="p-2 bd-highlight border-start text-danger">Hoàn thành</div>
+            <div class="p-2 bd-highlight">
+              <a href="#" class="text-decoration-none text-success">
+                <i class="bi bi-truck"></i> Đơn hàng đang hoàn về cho người gửi
+              </a> 
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Giang">
+                <i class="bi bi-question-circle"></i>
+              </a>
+            </div>
+          </div>
+    
+          <div class="row border-bottom py-3"> 
+            <div class="col-3">
+              <img ng-src="./Images/default.jpg" width="100%" height="120px" alt="Sản phẩm">
+            </div>
+            <div class="col-7">
+              <p class="fs-5">{{x.tenSanPham || 'Tên sản phẩm'}}</p>
+              <p class="text-secondary">Phân loại: {{x.phanLoai || 'Không xác định'}}</p>
+              <p>x{{x.soLuong || 1}}</p>
+            </div>
+            <div class="col-2 d-flex justify-content-center align-items-center">
+              <div class="text-center">
+                <span class="text-secondary text-decoration-line-through" ng-if="x.giaGoc">₫{{x.giaGoc}}</span>
+                <span class="text-danger fw-bold">₫{{x.giaKhuyenMai || x.giaGoc}}</span>
+              </div>
+            </div>
+          </div>
+    
+          <div class="row py-3">
+            <div class="d-flex flex-column bd-highlight">
+              <div class="p-2 bd-highlight text-end">
+                Thành tiền: <span class="text-danger fs-4">₫{{x.giaKhuyenMai || x.giaGoc}}</span>
+              </div>
+              <div class="p-2 bd-highlight">
+                <div class="d-flex justify-content-between">
+                  <div class="p-2 bd-highlight text-secondary">Đã hủy bởi bạn</div>
+                  <div class="p-2 bd-highlight">
+                    <button class="btn btn-danger" ng-click="muaLai(x)">Mua lại</button>
+                    <button class="btn btn-outline-dark" ng-click="xemChiTiet(x)">Chi tiết</button>
+                    <a href="tel:0987654321" class="btn btn-outline-dark">Liên hệ người bán</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="tab4" role="tabpanel">
+      <div ng-repeat="x in dataHoaDon" ng-switch="x.trangthaidonhang" class="mb-3 bg-light">
+        
+        <!-- Kiểm tra trạng thái đơn hàng -->
+        <div ng-switch-when="2">
+          <div class="d-flex flex-row-reverse bd-highlight border-bottom">
+            <div class="p-2 bd-highlight border-start text-danger">Hoàn thành</div>
+            <div class="p-2 bd-highlight">
+              <a href="#" class="text-decoration-none text-success">
+                <i class="bi bi-truck"></i> Đơn hàng đang hoàn về cho người gửi
+              </a> 
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Giang">
+                <i class="bi bi-question-circle"></i>
+              </a>
+            </div>
+          </div>
+    
+          <div class="row border-bottom py-3"> 
+            <div class="col-3">
+              <img ng-src="./Images/default.jpg" width="100%" height="120px" alt="Sản phẩm">
+            </div>
+            <div class="col-7">
+              <p class="fs-5">{{x.tenSanPham || 'Tên sản phẩm'}}</p>
+              <p class="text-secondary">Phân loại: {{x.phanLoai || 'Không xác định'}}</p>
+              <p>x{{x.soLuong || 1}}</p>
+            </div>
+            <div class="col-2 d-flex justify-content-center align-items-center">
+              <div class="text-center">
+                <span class="text-secondary text-decoration-line-through" ng-if="x.giaGoc">₫{{x.giaGoc}}</span>
+                <span class="text-danger fw-bold">₫{{x.giaKhuyenMai || x.giaGoc}}</span>
+              </div>
+            </div>
+          </div>
+    
+          <div class="row py-3">
+            <div class="d-flex flex-column bd-highlight">
+              <div class="p-2 bd-highlight text-end">
+                Thành tiền: <span class="text-danger fs-4">₫{{x.giaKhuyenMai || x.giaGoc}}</span>
+              </div>
+              <div class="p-2 bd-highlight">
+                <div class="d-flex justify-content-between">
+                  <div class="p-2 bd-highlight text-secondary">Đã hủy bởi bạn</div>
+                  <div class="p-2 bd-highlight">
+                    <button class="btn btn-danger" ng-click="muaLai(x)">Mua lại</button>
+                    <button class="btn btn-outline-dark" ng-click="xemChiTiet(x)">Chi tiết</button>
+                    <a href="tel:0987654321" class="btn btn-outline-dark">Liên hệ người bán</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="tab5" role="tabpanel">
+      <div ng-repeat="x in dataHoaDon" ng-switch="x.trangthaidonhang" class="mb-3 bg-light">
+        
+        <!-- Kiểm tra trạng thái đơn hàng -->
+        <div ng-switch-when="3">
+          <div class="d-flex flex-row-reverse bd-highlight border-bottom">
+            <div class="p-2 bd-highlight border-start text-danger">Hoàn thành</div>
+            <div class="p-2 bd-highlight">
+              <a href="#" class="text-decoration-none text-success">
+                <i class="bi bi-truck"></i> Đơn hàng đang hoàn về cho người gửi
+              </a> 
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Giang">
+                <i class="bi bi-question-circle"></i>
+              </a>
+            </div>
+          </div>
+    
+          <div class="row border-bottom py-3"> 
+            <div class="col-3">
+              <img ng-src="./Images/default.jpg" width="100%" height="120px" alt="Sản phẩm">
+            </div>
+            <div class="col-7">
+              <p class="fs-5">{{x.tenSanPham || 'Tên sản phẩm'}}</p>
+              <p class="text-secondary">Phân loại: {{x.phanLoai || 'Không xác định'}}</p>
+              <p>x{{x.soLuong || 1}}</p>
+            </div>
+            <div class="col-2 d-flex justify-content-center align-items-center">
+              <div class="text-center">
+                <span class="text-secondary text-decoration-line-through" ng-if="x.giaGoc">₫{{x.giaGoc}}</span>
+                <span class="text-danger fw-bold">₫{{x.giaKhuyenMai || x.giaGoc}}</span>
+              </div>
+            </div>
+          </div>
+    
+          <div class="row py-3">
+            <div class="d-flex flex-column bd-highlight">
+              <div class="p-2 bd-highlight text-end">
+                Thành tiền: <span class="text-danger fs-4">₫{{x.giaKhuyenMai || x.giaGoc}}</span>
+              </div>
+              <div class="p-2 bd-highlight">
+                <div class="d-flex justify-content-between">
+                  <div class="p-2 bd-highlight text-secondary">Đã hủy bởi bạn</div>
+                  <div class="p-2 bd-highlight">
+                    <button class="btn btn-danger" ng-click="muaLai(x)">Mua lại</button>
+                    <button class="btn btn-outline-dark" ng-click="xemChiTiet(x)">Chi tiết</button>
+                    <a href="tel:0987654321" class="btn btn-outline-dark">Liên hệ người bán</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="tab6" role="tabpanel">
+      <div ng-repeat="x in dataHoaDon" ng-switch="x.trangthaidonhang" class="mb-3 bg-light">
+        
+        <!-- Kiểm tra trạng thái đơn hàng -->
+        <div ng-switch-when="4">
+          <div class="d-flex flex-row-reverse bd-highlight border-bottom">
+            <div class="p-2 bd-highlight border-start text-danger">Hoàn thành</div>
+            <div class="p-2 bd-highlight">
+              <a href="#" class="text-decoration-none text-success">
+                <i class="bi bi-truck"></i> Đơn hàng đang hoàn về cho người gửi
+              </a> 
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Giang">
+                <i class="bi bi-question-circle"></i>
+              </a>
+            </div>
+          </div>
+    
+          <div class="row border-bottom py-3"> 
+            <div class="col-3">
+              <img ng-src="./Images/default.jpg" width="100%" height="120px" alt="Sản phẩm">
+            </div>
+            <div class="col-7">
+              <p class="fs-5">{{x.tenSanPham || 'Tên sản phẩm'}}</p>
+              <p class="text-secondary">Phân loại: {{x.phanLoai || 'Không xác định'}}</p>
+              <p>x{{x.soLuong || 1}}</p>
+            </div>
+            <div class="col-2 d-flex justify-content-center align-items-center">
+              <div class="text-center">
+                <span class="text-secondary text-decoration-line-through" ng-if="x.giaGoc">₫{{x.giaGoc}}</span>
+                <span class="text-danger fw-bold">₫{{x.giaKhuyenMai || x.giaGoc}}</span>
+              </div>
+            </div>
+          </div>
+    
+          <div class="row py-3">
+            <div class="d-flex flex-column bd-highlight">
+              <div class="p-2 bd-highlight text-end">
+                Thành tiền: <span class="text-danger fs-4">₫{{x.giaKhuyenMai || x.giaGoc}}</span>
+              </div>
+              <div class="p-2 bd-highlight">
+                <div class="d-flex justify-content-between">
+                  <div class="p-2 bd-highlight text-secondary">Đã hủy bởi bạn</div>
+                  <div class="p-2 bd-highlight">
+                    <button class="btn btn-danger" ng-click="muaLai(x)">Mua lại</button>
+                    <button class="btn btn-outline-dark" ng-click="xemChiTiet(x)">Chi tiết</button>
+                    <a href="tel:0987654321" class="btn btn-outline-dark">Liên hệ người bán</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="tab7" role="tabpanel">
+      <div ng-repeat="x in dataTraHang" class="mb-3 bg-light">
+        <div class="d-flex flex-row-reverse bd-highlight border-bottom">
+          <div class="p-2 bd-highlight border-start" style="color: orangered;">Hoàn thành</div>
+          <div class="p-2 bd-highlight">
+            <a href="#" class="text-decoration-none text-success">
+              <i class="bi bi-truck"></i> {{x.trangthaiStr}}
+            </a> 
+            <a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Giang">
+              <i class="bi bi-question-circle"></i>
+            </a>
+          </div>
+        </div>
+        <div class="row border-bottom py-3"> 
+          <div class="col-3 ps-3">
+            <img src="./Images/1.jpg" width="100%" height="120px">
+          </div>
+          <div class="col-7">
+            <p class="fs-5">Giayf</p>
+            <p class="text-secondary">Phân loại: Da độn - Đen - 38</p>
+            <p>x1</p>
+          </div>
+          <div class="col-2 d-flex justify-content-center align-items-center">
+            <div class="text-center">
+                <span class="text-secondary text-decoration-line-through">{{ x.tongtiensanpham | currency:"₫":0 }} </span>
+                <span style="color: orangered;">{{ x.tongtiencantra | currency:"₫":0 }}0</span>
+            </div>
+          </div>
+        </div>
+        <div class="row py-3">
+          <div class="d-flex flex-column bd-highlight">
+            <div class="p-2 bd-highlight">
+              <div class="text-end">
+                Thành tiền: <span style="color: orangered; font-size: 24px;">{{ x.tongtiencantra | currency:"₫":0 }}
+                </span>
+              </div>
+            </div>
+            <div class="p-2 bd-highlight">
+              <div class="d-flex justify-content-between">
+                <div class="p-2 bd-highlight text-secondary">Đã hủy bởi bạn</div>
+                <div class="p-2 bd-highlight">
+                  <button class="btn btn-danger">Mua lại</button>
+                  <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#chitietModal">Chi tiết</button>
+                  <a href="tel:0987654321" class="btn btn-outline-dark">Liên hệ người bán</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,560 @@
+<style>
+    :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3f37c9;
+        --success-color: #4cc9f0;
+        --danger-color: #f72585;
+        --warning-color: #f8961e;
+        --info-color: #4895ef;
+        --light-color: #f8f9fa;
+        --dark-color: #212529;
+        --border-radius: 10px;
+        --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f5f7fa;
+        color: #333;
+        padding: 20px;
+    }
+
+    .container {
+        background: #fff;
+        padding: 25px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        margin-bottom: 30px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .page-title {
+        font-weight: 600;
+        color: var(--dark-color);
+        margin: 0;
+    }
+
+    /* Button styles */
+    .btn {
+        border-radius: var(--border-radius);
+        font-weight: 500;
+        padding: 8px 16px;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn i {
+        font-size: 14px;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .btn-primary:hover {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+        transform: translateY(-2px);
+    }
+
+    /* Table styles */
+    .table {
+        margin-bottom: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .table thead th {
+        background-color: #f8fafc;
+        color: #64748b;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 12px 15px;
+    }
+
+    .table tbody td {
+        padding: 15px;
+        vertical-align: middle;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .table tbody tr:hover {
+        background-color: rgba(67, 97, 238, 0.03);
+    }
+
+    /* Toggle switch */
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: var(--transition);
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: var(--transition);
+        border-radius: 50%;
+    }
+
+    input:checked+.slider {
+        background-color: var(--primary-color);
+    }
+
+    input:checked+.slider:before {
+        transform: translateX(26px);
+    }
+
+    /* Modal styles */
+    .modal-content {
+        border: none;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .modal-header {
+        background-color: var(--primary-color);
+        color: white;
+        border-bottom: none;
+        padding: 20px;
+    }
+
+    .modal-title {
+        font-weight: 600;
+        margin: 0 auto;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .modal-footer {
+        border-top: none;
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+    }
+
+    /* Form styles */
+    .form-control,
+    .form-select {
+        border-radius: var(--border-radius);
+        padding: 10px 15px;
+        border: 1px solid #e2e8f0;
+        transition: var(--transition);
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+
+    /* Card styles */
+    .card {
+        border: none;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        margin-bottom: 20px;
+    }
+
+    .card-header {
+        background-color: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 15px 20px;
+        font-weight: 600;
+    }
+
+    /* Action buttons */
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .container {
+            padding: 15px;
+        }
+
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+            gap: 5px;
+        }
+    }
+</style>
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">Quản lý Sale</h1>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSaleModal">
+            <i class="fas fa-plus"></i> Thêm Sale
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Tên Sale</th>
+                    <th>Mô tả</th>
+                    <th>Ngày Bắt Đầu</th>
+                    <th>Ngày Kết Thúc</th>
+                    <th class="text-center">Trạng Thái</th>
+                    <th class="text-center">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><strong>Khuyến mãi 50%</strong></td>
+                    <td>Giảm giá lớn cho tất cả sản phẩm</td>
+                    <td>01/04/2024</td>
+                    <td>30/04/2024</td>
+                    <td class="text-center">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                    <td class="text-center">
+                        <div class="action-buttons">
+                            <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewSaleModal">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#editSaleModal">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#deleteSaleModal">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><strong>Giảm giá mùa hè</strong></td>
+                    <td>Ưu đãi đặc biệt mùa hè</td>
+                    <td>15/05/2024</td>
+                    <td>15/07/2024</td>
+                    <td class="text-center">
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                    <td class="text-center">
+                        <div class="action-buttons">
+                            <button class="btn btn-info btn-sm">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Thêm Sale -->
+<div class="modal fade" id="addSaleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="margin-left: initial">Thêm Sale</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Tên Sale</label>
+                    <input type="text" class="form-control" placeholder="Nhập tên sale">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mô tả</label>
+                    <textarea class="form-control" rows="3" placeholder="Nhập mô tả"></textarea>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Ngày Bắt Đầu</label>
+                        <input type="datetime-local" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Ngày Kết Thúc</label>
+                        <input type="datetime-local" class="form-control">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Chi Tiết Sale</span>
+                            <button class="btn btn-sm btn-primary" id="btnAddSaleDetail">
+                                <i class="fas fa-plus"></i> Thêm Chi Tiết
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 35%;">Sản phẩm</th>
+                                        <th style="width: 15%;">Đơn vị</th>
+                                        <th style="width: 15%;">Số lượng</th>
+                                        <th style="width: 25%;">Giá trị giảm</th>
+                                        <th style="width: 10%;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="saleDetailBody">
+                                    <!-- Dữ liệu chi tiết sale sẽ thêm vào đây -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Xem Sale -->
+<div class="modal fade" id="viewSaleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="margin-left: initial">Chi tiết Sale</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-tag me-2"></i>Tên Sale:</strong> Khuyến mãi 50%</p>
+                        <p><strong><i class="fas fa-calendar-alt me-2"></i>Ngày Bắt Đầu:</strong> 01/04/2024 00:00</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-align-left me-2"></i>Mô tả:</strong> Giảm giá lớn</p>
+                        <p><strong><i class="fas fa-calendar-times me-2"></i>Ngày Kết Thúc:</strong> 30/04/2024 23:59
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span>Chi Tiết Sale</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Sản phẩm</th>
+                                        <th>Đơn vị</th>
+                                        <th>Số lượng</th>
+                                        <th>Giá trị giảm</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="viewSaleDetailBody">
+                                    <tr>
+                                        <td>Áo thun nam</td>
+                                        <td>%</td>
+                                        <td>100</td>
+                                        <td>50%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Quần jean</td>
+                                        <td>VNĐ</td>
+                                        <td>50</td>
+                                        <td>200,000₫</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Sửa Sale -->
+<div class="modal fade" id="editSaleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="margin-left: initial">Sửa Sale</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Tên Sale</label>
+                    <input type="text" class="form-control" value="Khuyến mãi 50%">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mô tả</label>
+                    <textarea class="form-control" rows="3">Giảm giá lớn</textarea>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Ngày Bắt Đầu</label>
+                        <input type="datetime-local" class="form-control" value="2024-04-01T00:00">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Ngày Kết Thúc</label>
+                        <input type="datetime-local" class="form-control" value="2024-04-30T23:59">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Cập Nhật Chi Tiết Sale</span>
+                            <button class="btn btn-sm btn-primary" id="btnAddSaleDetailupdate">
+                                <i class="fas fa-plus"></i> Thêm Chi Tiết
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%;">Sản phẩm</th>
+                                        <th style="width: 15%;">Đơn vị</th>
+                                        <th style="width: 15%;">Số lượng</th>
+                                        <th style="width: 22%;">Giá trị giảm</th>
+                                        <th style="width: 9%;"></th>
+                                        <th style="width: 9%;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="editSaleDetailBody">
+                                    <tr>
+                                        <td>
+                                            <select class="form-select">
+                                                <option value="sp1" selected>Áo thun nam</option>
+                                                <option value="sp2">Quần jean</option>
+                                                <option value="sp3">Giày thể thao</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select">
+                                                <option value="1" selected>%</option>
+                                                <option value="0">VNĐ</option>
+                                            </select>
+                                        </td>
+                                        <td><input type="number" class="form-control" value="100"></td>
+                                        <td><input type="number" class="form-control" value="50"></td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-warning btn-sm btnUpdateDetail">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Xóa Sale -->
+<div class="modal fade" id="deleteSaleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="margin-left: initial">Xác nhận xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa sale <strong>"Khuyến mãi 50%"</strong> không?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-danger">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>

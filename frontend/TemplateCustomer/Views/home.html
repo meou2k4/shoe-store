@@ -1,0 +1,429 @@
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .card {
+        transition: 0.3s;
+        border: none;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.15);
+    }
+    .disabled-card {
+    opacity: 0.5;
+    pointer-events: none;
+    }
+
+.disabled-link {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+    .card-img-container {
+        position: relative;
+        width: 100%;
+    }
+
+    .card img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+
+    .flash-sale-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: linear-gradient(45deg, #ff416c, #ff4b2b);
+        color: white;
+        padding: 6px 12px;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 5px;
+        z-index: 10;
+    }
+
+    .discount-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #ffcc00;
+        color: #222;
+        padding: 6px 12px;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 5px;
+        z-index: 10;
+    }
+
+    .countdown {
+        font-size: 14px;
+        font-weight: bold;
+        color: white;
+    }
+
+    .showall {
+        color: black;
+    }
+
+    .showall:hover {
+        color: red;
+    }
+
+    /* Giới hạn chiều cao tbody và thêm thanh cuộn */
+    .table-container {
+        max-height: 400px;
+        /* Điều chỉnh phù hợp với chiều cao 20 hàng */
+        overflow-y: auto;
+        display: block;
+    }
+
+    /* Cố định tiêu đề bảng */
+    thead {
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 2;
+    }
+
+    /* Định dạng bảng */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+        vertical-align: middle;
+    }
+
+    /* Hình ảnh user */
+    .user-img {
+        border-radius: 50%;
+        border: 2px solid black;
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+    }
+</style>
+<div id="carouselExampleInterval" class="container carousel slide mb-3" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active" data-bs-interval="5000">
+            <img src="./Images/1.jpg" class="d-block w-100" >
+        </div>
+        <div class="carousel-item" data-bs-interval="5000">
+            <img src="./Images/2.jpg" class="d-block w-100">
+        </div>
+        <div class="carousel-item" data-bs-interval="5000">
+            <img src="./Images/3.jpg" class="d-block w-100">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+<p class="mb-3" style="font-weight: bold;font-size: 24px; text-decoration: underline;">SẢN PHẨM PHỔ BIẾN</p>
+<div class="row" style="height: 500px;">
+    <div class="col-md-4" ng-repeat="product in sanPhamPhoBien">
+        <div class="card rounded-0">
+            <div class="card-img-container">
+                <div class="discount-badge" ng-if="product.giaTriGiam > 0 && product.giaTriGiam <= 100">
+                    -{{product.giaTriGiam}}%</div>
+                <div class="discount-badge" ng-if="product.giaTriGiam > 0 && product.giaTriGiam > 100">
+                    -{{product.giaTriGiam| number : 0}}VNĐ</div>
+                <img ng-src="{{product.hinhAnh}}" alt="Ảnh sản phẩm" height="300px" class="card-img-top  rounded-0"
+                    alt="...">
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{product.tensp}}</h5>
+                <div class="d-flex justify-content-between">
+                    <!-- Nếu có giảm giá thì hiển thị giá gốc gạch ngang -->
+                    <div class="p-2 text-decoration-line-through text-start "
+                        ng-if="product.giaban > product.giasale && product.giasale !== product.giaban">
+                        {{product.giaban| number : 0}}VNĐ
+                    </div>
+                    <div class="p-2 text-end text-danger fw-bold ms-auto" ng-if="product.giasale === product.giaban">
+                        {{product.giaban| number : 0}}VNĐ
+                    </div>
+                    <!-- Hiển thị giá sale nếu có giảm giá -->
+                    <div class="p-2 text-end text-danger fw-bold"
+                        ng-if="product.giaban > product.giasale && product.giasale !== product.giaban">
+                        {{product.giasale| number : 0}}VNĐ
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <div class="p-2 text-decoration-line-through text-start text-danger"><i
+                            class="bi bi-heart-fill"></i></div>
+                    <div class="p-2 text-end" style="font-size: 12px;">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="rating-stars">
+                                <span ng-repeat="star in generateStars(product.trungBinhDanhGia) track by $index">
+                                    <i class="bi" ng-class="{
+                                           'bi-star-fill text-warning': star === 'full',
+                                           'bi-star-half text-warning': star === 'half',
+                                           'bi-star text-muted': star === 'empty'
+                                       }">
+                                    </i>
+                                </span>
+                            </div>
+                            <div class="ms-2">
+                                <i>{{ getTotalSPCT(product) }} đã bán</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#!SanpDetail/{{product.id}}" class="fs-4 w-50 btn btn-outline-dark">Mua ngay <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+<p class="mb-3" style="font-weight: bold;font-size: 24px; text-decoration: underline;">SẢN PHẨM MỚI</p>
+<div class="row">
+    <div style="height: 450px;" class="col-6 col-md-4 col-lg-3" ng-repeat="product in sanPhamMoi">
+        <a href="#!SanpDetail/{{product.id}}" style="text-decoration: none;"ng-class="{'disabled-link': product.soluong === 0}">
+            <div class="card rounded-0" ng-class="{'disabled-card': product.soluong === 0}">
+                <div class="card-img-container">
+
+                    <div class="discount-badge"
+                        ng-if="product.giaTriGiam > 0 && product.giaTriGiam <= 100">
+                        -{{product.giaTriGiam}}%</div>
+                    <div class="discount-badge"
+                        ng-if="product.giaTriGiam > 0 && product.giaTriGiam > 100">
+                        -{{product.giaTriGiam| number : 0}}VNĐ</div>
+                    <img ng-src="{{product.hinhAnh}}" alt="Ảnh sản phẩm" height="300px"
+                        class="card-img-top  rounded-0" alt="...">
+                </div>
+                <div class="card-body">
+
+                    <h5 class="card-title">{{product.tensp}}</h5>
+                    <div class="d-flex justify-content-between">
+                        <!-- Nếu có giảm giá thì hiển thị giá gốc gạch ngang -->
+                        <div class="p-2 text-decoration-line-through text-start "
+                            ng-if="product.giaban > product.giasale && product.giasale !== product.giaban">
+                            {{product.giaban| number : 0}}VNĐ
+                        </div>
+                        <div class="p-2 text-end text-danger fw-bold ms-auto"
+                            ng-if="product.giasale === product.giaban">
+                            {{product.giaban| number : 0}}VNĐ
+                        </div>
+                        <!-- Hiển thị giá sale nếu có giảm giá -->
+                        <div class="p-2 text-end text-danger fw-bold"
+                            ng-if="product.giaban > product.giasale && product.giasale !== product.giaban">
+                            {{product.giasale| number : 0}}VNĐ
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <div class="p-2 text-decoration-line-through text-start text-danger"><i
+                                class="bi bi-heart-fill"></i></div>
+                        <div class="p-2 text-end" style="font-size: 12px;">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="rating-stars">
+                                    <span ng-repeat="star in generateStars(product.trungBinhDanhGia) track by $index">
+                                        <i class="bi" ng-class="{
+                                               'bi-star-fill text-warning': star === 'full',
+                                               'bi-star-half text-warning': star === 'half',
+                                               'bi-star text-muted': star === 'empty'
+                                           }">
+                                        </i>
+                                    </span>
+                                </div>
+                                <div class="ms-2">
+                                    <i>{{ getTotalSPCT(product) }} đã bán</i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+<div  class="row mb-3"  ng-repeat="(thuongHieu, group) in thuongHieu">
+    <p class="mb-3" style="font-weight: bold;font-size: 24px; text-decoration: underline;">{{group.thuongHieu}}</p>
+            <div style="height: 450px;" class="col-6 col-md-4 col-lg-3" ng-repeat="product in group.sanPhams"ng-class="{'disabled-link': product.soluong === 0}" >
+                <a href="#!SanpDetail/{{product.id}}" style="text-decoration: none;" ng-class="{'disabled-card': product.soluong === 0}">
+                    <div class="card rounded-0">
+                        <div class="card-img-container">
+
+                            <div class="discount-badge"
+                                ng-if="product.giaTriGiam > 0 && product.giaTriGiam <= 100">
+                                -{{product.giaTriGiam}}%</div>
+                            <div class="discount-badge"
+                                ng-if="product.giaTriGiam > 0 && product.giaTriGiam > 100">
+                                -{{product.giaTriGiam| number : 0}}VNĐ</div>
+                            <img ng-src="{{product.hinhAnh}}" alt="Ảnh sản phẩm" height="300px"
+                                class="card-img-top  rounded-0" alt="...">
+                        </div>
+                        <div class="card-body">
+
+                            <h5 class="card-title">{{product.tensp}}</h5>
+                            <div class="d-flex justify-content-between">
+                                <!-- Nếu có giảm giá thì hiển thị giá gốc gạch ngang -->
+                                <div class="p-2 text-decoration-line-through text-start "
+                                    ng-if="product.giaban > product.giasale && product.giasale !== product.giaban">
+                                    {{product.giaban| number : 0}}VNĐ
+                                </div>
+                                <div class="p-2 text-end text-danger fw-bold ms-auto"
+                                    ng-if="product.giasale === product.giaban">
+                                    {{product.giaban| number : 0}}VNĐ
+                                </div>
+                                <!-- Hiển thị giá sale nếu có giảm giá -->
+                                <div class="p-2 text-end text-danger fw-bold"
+                                    ng-if="product.giaban > product.giasale && product.giasale !== product.giaban">
+                                    {{product.giasale| number : 0}}VNĐ
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <div class="p-2 text-decoration-line-through text-start text-danger"><i
+                                        class="bi bi-heart-fill"></i></div>
+                                <div class="p-2 text-end" style="font-size: 12px;">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="rating-stars">
+                                            <span ng-repeat="star in generateStars(product.trungBinhDanhGia) track by $index">
+                                                <i class="bi" ng-class="{
+                                                       'bi-star-fill text-warning': star === 'full',
+                                                       'bi-star-half text-warning': star === 'half',
+                                                       'bi-star text-muted': star === 'empty'
+                                                   }">
+                                                </i>
+                                            </span>
+                                        </div>
+                                        <div class="ms-2">
+                                            <i>{{ getTotalSPCT(product) }} đã bán</i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+</div>
+
+<div class="row border-top border-bottom mb-3">
+    <div class="col-md-3">
+        <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+                <img src="https://bizweb.dktcdn.net/100/344/983/themes/704702/assets/policy_images_1.png?1628514159582">
+            </div>
+            <div class="flex-grow-1 m-3">
+                <h6>Miễn phí vận chuyển</h6>
+                <p style="font-size: 12px;">Cho các đơn hàng</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+                <img src="https://bizweb.dktcdn.net/100/344/983/themes/704702/assets/policy_images_2.png?1628514159582">
+            </div>
+            <div class="flex-grow-1 m-3">
+                <h6>Hỗ trợ 24/7</h6>
+                <p style="font-size: 12px;">Liên hệ hỗ trợ 24h/ngày</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+                <img src="https://bizweb.dktcdn.net/100/344/983/themes/704702/assets/policy_images_3.png?1628514159582">
+            </div>
+            <div class="flex-grow-1 m-3">
+                <h6>Hoàn tiền 100%</h6>
+                <p style="font-size: 12px;">Nếu sản phẩm bị lỗi, hư hỏng</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+                <img src="https://bizweb.dktcdn.net/100/344/983/themes/704702/assets/policy_images_4.png?1628514159582">
+            </div>
+            <div class="flex-grow-1 m-3">
+                <h6>Thanh toán</h6>
+                <p style="font-size: 12px;">Được bảo mật 100%</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p class="mb-3" style="font-weight: bold;font-size: 24px; text-decoration: underline;">TOP SẢN PHẨM CÓ LƯỢT ĐÁNH GIÁ CAO
+</p>
+<div class="row" style="height: 450px;">
+    <div style="height: 450px;" class="col-6 col-md-4 col-lg-3" ng-repeat="product in spDanhGiaCao">
+        <a href="#!SanpDetail/{{product.id}}" style="text-decoration: none;" ng-class="{'disabled-link': product.soluong === 0}">
+            <div class="card rounded-0" ng-class="{'disabled-card': product.soluong === 0}">
+                <div class="card-img-container">
+
+                    <div class="discount-badge"
+                        ng-if="product.giaTriGiam > 0 && product.giaTriGiam <= 100">
+                        -{{product.giaTriGiam}}%</div>
+                    <div class="discount-badge"
+                        ng-if="product.giaTriGiam > 0 && product.giaTriGiam > 100">
+                        -{{product.giaTriGiam| number : 0}}VNĐ</div>
+                    <img ng-src="{{product.hinhAnh}}" alt="Ảnh sản phẩm" height="300px"
+                        class="card-img-top  rounded-0" alt="...">
+                </div>
+                <div class="card-body">
+
+                    <h5 class="card-title">{{product.tensp}}</h5>
+                    <div class="d-flex justify-content-between">
+                        <!-- Nếu có giảm giá thì hiển thị giá gốc gạch ngang -->
+                        <div class="p-2 text-decoration-line-through text-start "
+                            ng-if="product.giaban > product.giasale && product.giasale !== product.giaban">
+                            {{product.giaban| number : 0}}VNĐ
+                        </div>
+                        <div class="p-2 text-end text-danger fw-bold ms-auto"
+                            ng-if="product.giasale === product.giaban">
+                            {{product.giaban| number : 0}}VNĐ
+                        </div>
+                        <!-- Hiển thị giá sale nếu có giảm giá -->
+                        <div class="p-2 text-end text-danger fw-bold"
+                            ng-if="product.giaban > product.giasale && product.giasale !== product.giaban">
+                            {{product.giasale| number : 0}}VNĐ
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <div class="p-2 text-decoration-line-through text-start text-danger"><i
+                                class="bi bi-heart-fill"></i></div>
+                        <div class="p-2 text-end" style="font-size: 12px;">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="rating-stars">
+                                    <span ng-repeat="star in generateStars(product.trungBinhDanhGia) track by $index">
+                                        <i class="bi" ng-class="{
+                                               'bi-star-fill text-warning': star === 'full',
+                                               'bi-star-half text-warning': star === 'half',
+                                               'bi-star text-muted': star === 'empty'
+                                           }">
+                                        </i>
+                                    </span>
+                                </div>
+                                <div class="ms-2">
+                                    <i>{{ getTotalSPCT(product) }} đã bán</i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>

@@ -1,0 +1,568 @@
+<style>
+    .variant-container {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        /* Căn giữa các phần tử */
+    }
+
+    .btn-upload {
+        color: #f44336;
+        border: 1px solid #f44336;
+        background-color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .btn-upload:hover {
+        background-color: #f44336;
+        color: #fff;
+    }
+
+    .btn-upload i {
+        margin-right: 5px;
+        font-size: 18px;
+    }
+
+    .hidden-input {
+        display: none;
+    }
+
+    .position-relative .btn-danger {
+        padding: 2px 6px;
+        font-size: 12px;
+    }
+
+    @media (min-width: 992px) {
+
+        /* Màn hình lớn trở lên */
+        .col-lg-1-5 {
+            flex: 0 0 20%;
+            max-width: 20%;
+        }
+    }
+
+    @media (min-width: 1200px) {
+
+        /* Màn hình rất lớn */
+        .col-xl-1-5 {
+            flex: 0 0 20%;
+            max-width: 20%;
+        }
+    }
+</style>
+<div class="container">
+    <form ng-submit="updateProduct()" class="p-3 border rounded shadow-sm bg-light " name="frm" novalidate>
+        <h4 class="mb-3">Chi tiết sản phẩm</h4>
+
+        <hr style="border: 2px solid gold;">
+        <div class="d-flex">
+            <button class="btn btn-primary me-1" type="button" data-bs-toggle="modal" data-bs-target="#modalChatLieu"
+                ng-click="resetChatLieu()">
+                <i class="bi bi-box"></i> Thêm chất liệu
+            </button>
+            <button class="btn btn-primary me-1" type="button" data-bs-toggle="modal" data-bs-target="#modalMauSac"
+                ng-click="resetColor()">
+                <i class="bi bi-palette"></i> Thêm màu sắc
+            </button>
+            <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modalSize"
+                ng-click="resetSize()">
+                <i class="bi bi-arrows-angle-expand"></i> Thêm Size
+            </button>
+
+        </div>
+        <hr>
+        <div class="mb-2 mt-4">
+            <label for="tenSanpham">Tên sản phẩm:</label>
+            <input type="text" class="form-control" id="tenSanpham" name="tenSanpham" ng-minlength="2"
+                ng-maxlength="100" ng-model="product.tenSanpham" required placeholder="Nhập tên sản phẩm" disabled>
+            <span
+                ng-show="(frm.tenSanpham.$error.required && frm.tenSanpham.$touched) ||(frm.tenSanpham.$error.required && frm.$submitted)"
+                class="text-danger">Không để trống tên sản phẩm</span>
+            <span class="text-danger"
+                ng-show="frm.tenSanpham.$error.minlength && (frm.tenSanpham.$touched || frm.$submitted)">
+                Tên sản phẩm phải có ít nhất 2 ký tự
+            </span>
+            <!-- Max length -->
+            <span class="text-danger"
+                ng-show="frm.tenSanpham.$error.maxlength && (frm.tenSanpham.$touched || frm.$submitted)">
+                Tên sản phẩm không được vượt quá 100 ký tự
+            </span>
+        </div>
+        <div class="mb-2">
+            <label>Giá bán:</label>
+            <input type="number" class="form-control" ng-model="product.giaBan" name="giaBan" min="0" max="100000000"
+                ng-keydown="blockInvalidKeys($event)" required placeholder="Nhập giá tiền"
+                ng-keydown="blockInvalidKeys($event)" disabled>
+
+            <span class="text-danger" ng-show="(frm.giaBan.$error.required && frm.giaBan.$touched) || 
+                   (frm.giaBan.$error.required && frm.$submitted)">
+                Không được để trống giá bán
+            </span>
+            <span class="text-danger" ng-show="frm.giaBan.$error.min && (frm.giaBan.$touched || frm.$submitted)">
+                Giá bán phải lớn hơn hoặc bằng 0
+            </span>
+            <span class="text-danger" ng-show="frm.giaBan.$error.max && (frm.giaBan.$touched || frm.$submitted)">
+                Giá bán không được vượt quá 100 triệu
+            </span>
+            <span class="text-danger" ng-show="frm.giaBan.$error.number && (frm.giaBan.$touched || frm.$submitted)">
+                Giá bán phải là một số hợp lệ
+            </span>
+        </div>
+
+        <div class="mb-2">
+            <label>Thương hiệu:</label>
+            <select class="form-select" name="idth" ng-model="product.idth" required disabled>
+                <option value="" disabled selected>Chọn thương hiệu</option> <!-- Mục mặc định -->
+                <option ng-value="item.id" ng-repeat="item in categories0">{{item.tenthuonghieu}}</option>
+            </select>
+            <span class="text-danger"
+                ng-show="(frm.idth.$error.required && frm.idth.$touched) || (frm.idth.$error.required && frm.$submitted)">
+                Không được để trống thương hiệu
+            </span>
+        </div>
+
+        <hr ng-if="product.tenSanpham && product.giaBan && product.idth">
+
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" ng-click="showAddVariantModal()"
+            ng-if="product.tenSanpham && product.giaBan && product.idth">
+            <i class="bi bi-plus-circle"></i> <!-- Biểu tượng thêm -->
+            Thêm biến thể
+        </button>
+        <div class="mt-4" ng-if="product.tenSanpham && product.giaBan && product.idth">
+            <h5>Danh sách biến thể</h5>
+            <div class="row g-2 mt-4">
+                <div class="col-xl-1-5 col-lg-1-5 col-md-3 col-sm-4 col-6 mb-3" ng-repeat="variant in product.variants">
+                    <!--Thông báo ảnh bìa ở biến thể đầu tiên-->
+
+                    <div class="card shadow-sm border-0 rounded-3">
+                        <!-- Hình ảnh sản phẩm (chiếm toàn bộ phần trên) -->
+                        <img ng-if="variant.UrlHinhanh"
+                            ng-src="{{ variant.UrlHinhanh.startsWith('data:') ? variant.UrlHinhanh : 'https://localhost:7196/picture/' + variant.UrlHinhanh }}"
+                            class="card-img-top" alt="Ảnh biến thể"
+                            style="width: 100%; height: 200px; object-fit: cover; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+
+
+                        <div class="card-body text-center p-2">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="card-title text-primary fw-bold">💰 {{variant.Giathoidiemhientai |
+                                    currency:"₫"}}</h6>
+                                <h6 class="card-title text-muted">📦 {{variant.Soluong}}</h6>
+                            </div>
+                            <p class="card-text small">
+                                🖌️ {{ getColorName(variant.IdMau) }} |
+                                👞 {{ getSizeName(variant.IdSize) }} |
+                                🏭 {{ getMaterialName(variant.IdChatLieu) }}
+                            </p>
+                            <span class="badge" ng-class="{
+                            'bg-success': variant.Trangthai === 0 && variant.Soluong > 0,
+                            'bg-danger': variant.Trangthai === 1 || variant.Soluong === 0,
+                            'bg-secondary': variant.Trangthai === 2
+                            }">
+                                {{
+                                variant.Trangthai === 0 && variant.Soluong > 0
+                                ? '🟢 Đang bán'
+                                : (variant.Trangthai === 2
+                                ? '⚫ Ngừng bán '
+                                : '🔴 Hết hàng')
+                                }}
+                            </span>
+
+
+
+                            <div class="d-flex justify-content-between mt-2">
+                                <button class="btn btn-warning btn-sm" ng-click="showEditVariantModal(variant, $index)"
+                                    type="button">
+                                    ✏️ Sửa
+                                </button>
+
+
+                                <button class="btn btn-danger btn-sm" ng-click="removeVariant($index)">🗑️ Xóa</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="text-danger" ng-show="product.variants.length === 0 && (frm.$submitted || frm.$touched)">
+            Bạn cần thêm ít nhất một biến thể cho sản phẩm.
+        </div>
+        <hr ng-if="product.variants.length > 0">
+
+        <hr>
+        <h5>Vận chuyển</h5>
+        <div class="row">
+            <div class="col-3">
+                <label>Trọng lượng</label>
+                <input type="number" name="trongluong" class="form-control" ng-model="product.trongluong"
+                    placeholder="Trọng lượng (g)" required min="0" max="10000" step="1"
+                    ng-keydown="blockInvalidKeys($event)" required disabled>
+                <span class="text-danger"
+                    ng-show="(frm.trongluong.$error.required && frm.trongluong.$touched) || (frm.trongluong.$error.required && frm.$submitted)">
+                    Không được để trống trọng lượng
+                </span>
+                <span class="text-danger"
+                    ng-show="frm.trongluong.$error.min && (frm.trongluong.$touched || frm.$submitted)">
+                    Trọng lượng phải lớn hơn hoặc bằng 0
+                </span>
+                <span class="text-danger"
+                    ng-show="frm.trongluong.$error.max && (frm.trongluong.$touched || frm.$submitted)">
+                    Trọng lượng không được vượt quá 10.000g
+                </span>
+                <span class="text-danger"
+                    ng-show="frm.trongluong.$error.pattern && (frm.trongluong.$touched || frm.$submitted)">
+                    Trọng lượng phải là một số nguyên hợp lệ
+                </span>
+
+            </div>
+            <div class="col-3">
+                <label>Chiều dài</label>
+                <input type="number" name="chieudai" class="form-control" ng-model="product.chieudai"
+                    placeholder="Chiều dài (cm)" min="10" max="150" step="1" ng-keydown="blockInvalidKeys($event)"
+                    required disabled>
+                <span class="text-danger"
+                    ng-show="(frm.chieudai.$error.required && frm.chieudai.$touched) || (frm.chieudai.$error.required && frm.$submitted)">
+                    Không được để trống chiều dài
+                </span>
+                <span class="text-danger"
+                    ng-show="frm.chieudai.$error.min && (frm.chieudai.$touched || frm.$submitted)">
+                    Chiều dài phải lớn hơn hoặc bằng 10
+                </span>
+                <span class="text-danger"
+                    ng-show="frm.chieudai.$error.max && (frm.chieudai.$touched || frm.$submitted)">
+                    Chiều dài không được vượt quá 150
+                </span>
+                <span class="text-danger"
+                    ng-show="frm.chieudai.$error.pattern && (frm.chieudai.$touched || frm.$submitted)">
+                    Chiều dài phải là một số nguyên hợp lệ
+                </span>
+            </div>
+            <div class="col-3">
+                <label>Chiều rộng</label>
+                <input type="number" class="form-control" ng-model="product.chieurong" name="chieurong"
+                    placeholder="Chiều rộng (cm)" min="10" max="150" step="1" ng-keydown="blockInvalidKeys($event)"
+                    required disabled>
+                <span class="text-danger"
+                    ng-show="(frm.chieurong.$error.required && frm.chieurong.$touched) || (frm.chieurong.$error.required && frm.$submitted)">
+                    Không được để trống chiều rộng
+                </span>
+                <span class="text-danger"
+                    ng-show="frm.chieurong.$error.min && (frm.chieurong.$touched || frm.$submitted)">
+                    Chiều rộng phải lớn hơn hoặc bằng 10
+                </span>
+                <span class="text-danger"
+                    ng-show="frm.chieurong.$error.max && (frm.chieurong.$touched || frm.$submitted)">
+                    Chiều rộng không được vượt quá 150
+                </span>
+                <span class="text-danger"
+                    ng-show="frm.chieurong.$error.pattern && (frm.chieurong.$touched || frm.$submitted)">
+                    Chiều rộng phải là một số nguyên hợp lệ
+                </span>
+            </div>
+            <div class="col-3">
+                <label>Chiều cao</label>
+                <input type="number" class="form-control" ng-model="product.chieucao" name="chieucao"
+                    placeholder="Chiều cao (cm)" min="10" max="150" step="1" ng-keydown="blockInvalidKeys($event)"
+                    required disabled>
+                <span class="text-danger"
+                    ng-show="(frm.chieucao.$error.required && frm.chieucao.$touched) || (frm.chieucao.$error.required && frm.$submitted)">
+                    Không được để trống chiều cao
+                </span>
+                <span class="text-danger"
+                    ng-show="frm.chieucao.$error.min && (frm.chieucao.$touched || frm.$submitted)">
+                    Chiều cao phải lớn hơn hoặc bằng 10
+                </span>
+                <span class="text-danger"
+                    ng-show="frm.chieucao.$error.max && (frm.chieucao.$touched || frm.$submitted)">
+                    Chiều cao không được vượt quá 150
+                </span>
+                <span class="text-danger"
+                    ng-show="frm.chieucao.$error.pattern && (frm.chieucao.$touched || frm.$submitted)">
+                    Chiều cao phải là một số nguyên hợp lệ
+                </span>
+            </div>
+            <hr class="mt-4">
+            <div class="mb-2">
+                <label>Mô tả sản phẩm:</label>
+                <textarea class="form-control" ng-model="product.mota" rows="4" name="mota" ng-minlength="2"
+                    ng-maxlength="200" placeholder="Nhập mô tả cho sản phẩm" required disabled>
+                </textarea>
+                <small class="text-muted">{{ product.mota.length || 0 }}/200 ký tự</small>
+                <span class="text-danger"
+                    ng-show="(frm.mota.$error.required && frm.mota.$touched) || (frm.mota.$error.required && frm.$submitted)">
+                    Không được để trống mô tả sản phẩm
+                </span>
+                <span class="text-danger" ng-show="frm.mota.$error.minlength && (frm.mota.$touched || frm.$submitted)">
+                    Mô tả sản phẩm phải có ít nhất 2 ký tự
+                </span>
+                <span class="text-danger" ng-show="frm.mota.$error.maxlength && (frm.mota.$touched || frm.$submitted)">
+                    Mô tả sản phẩm không được vượt quá 200 ký tự
+                </span>
+            </div>
+            <div class="d-flex justify-content-center gap-3 mt-3">
+                <a href="#!sanpham" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Đóng
+                </a>
+
+                <button type="submit" class="btn btn-warning">
+                    <i class="fas fa-save"></i> Lưu
+                </button>
+
+                <a class="btn btn-info" href="#!/editSanPham/{{product.id}}" ng-if="product.id">
+                    <i class="fas fa-edit"></i> Sửa sản phẩm
+                </a>
+            </div>
+
+    </form>
+</div>
+<!-- Bắt đầu modal -->
+<div class="modal fade" id="addVariantModal" tabindex="-1" aria-labelledby="addVariantModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addVariantModalLabel">
+                    {{ isEditing ? 'Chỉnh sửa Biến Thể ' + editingIndex : 'Thêm Biến Thể ' + variantIndexCounter }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    ng-click="resetVariantForm()"></button>
+            </div>
+            <div class="modal-body">
+                <form ng-submit="saveVariant()" name="variantForm" novalidate>
+                    <div class="row">
+                        <!-- Cột trái -->
+                        <div class="col-md-6">
+                            <!-- Màu -->
+                            <div class="mb-2 mt-3">
+                                <label>Chọn màu:</label>
+                                <select class="form-select" ng-model="newVariant.IdMau" name="IdMau" required>
+                                    <option value="" disabled>Chọn màu</option>
+                                    <option ng-value="item.id" ng-repeat="item in colors0">{{item.tenmau}}</option>
+                                </select>
+                                <span class="text-danger"
+                                    ng-show="variantForm.IdMau.$touched && variantForm.IdMau.$error.required">
+                                    Không được để trống màu sắc
+                                </span>
+                            </div>
+
+                            <!-- Size -->
+                            <div class="mb-2 mt-3">
+                                <label>Chọn size:</label>
+                                <select class="form-select" ng-model="newVariant.IdSize" name="IdSize" required>
+                                    <option value="" disabled>Chọn size</option>
+                                    <option ng-value="item.id" ng-repeat="item in sizes0">{{item.sosize}}</option>
+                                </select>
+                                <span class="text-danger"
+                                    ng-show="variantForm.IdSize.$touched && variantForm.IdSize.$error.required">
+                                    Không được để trống size
+                                </span>
+                            </div>
+
+                            <!-- Chất liệu -->
+                            <div class="mb-2 mt-3">
+                                <label>Chọn chất liệu:</label>
+                                <select class="form-select" ng-model="newVariant.IdChatLieu" name="IdChatLieu" required>
+                                    <option value="" disabled>Chọn chất liệu</option>
+                                    <option ng-value="item.id" ng-repeat="item in chatlieus0">{{item.tenchatlieu}}
+                                    </option>
+                                </select>
+                                <span class="text-danger"
+                                    ng-show="variantForm.IdChatLieu.$touched && variantForm.IdChatLieu.$error.required">
+                                    Không được để trống chất liệu
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Cột phải -->
+                        <div class="col-md-6">
+                            <!-- Số lượng -->
+                            <div class="mb-2 mt-3">
+                                <label>Số lượng:</label>
+                                <input type="number" class="form-control" ng-model="newVariant.Soluong" name="Soluong"
+                                    min="0" max="1000" ng-keydown="blockInvalidKeys($event)" placeholder="Số lượng"
+                                    required>
+                                <span class="text-danger"
+                                    ng-show="variantForm.Soluong.$touched && variantForm.Soluong.$error.required">
+                                    Không được để trống số lượng
+                                </span>
+                                <span class="text-danger"
+                                    ng-show="variantForm.Soluong.$touched && variantForm.Soluong.$error.min">
+                                    Số lượng phải lớn hơn hoặc bằng 0
+                                </span>
+                                <span class="text-danger"
+                                    ng-show="variantForm.Soluong.$touched && variantForm.Soluong.$error.max">
+                                    Số lượng không được vượt quá 1000
+                                </span>
+                                <span class="text-danger"
+                                    ng-show="variantForm.Soluong.$touched && variantForm.Soluong.$error.pattern">
+                                    Số lượng phải là một số nguyên hợp lệ
+                                </span>
+                            </div>
+
+                            <!-- Giá bán -->
+                            <div class="mb-2 mt-3"
+                                ng-if="!isEditing && variantIndexCounter >1 || isEditing && editingIndex > 1">
+                                <label>Giá bán:</label>
+                                <button type="button" class="btn btn-primary w-100 mb-2" ng-click="togglePriceField()"
+                                    ng-show="!isPriceFieldVisible">
+                                    Thêm giá bán khác
+                                </button>
+
+                                <div ng-show="isPriceFieldVisible" class="position-relative mb-1">
+                                    <input type="number" class="form-control pe-5"
+                                        ng-model="newVariant.Giathoidiemhientai" placeholder="Giá bán"
+                                        name="Giathoidiemhientai" ng-min="1000" ng-max="100000000"
+                                        ng-required="isPriceFieldVisible" ng-keydown="blockInvalidKeys($event)">
+
+                                    <button type="button"
+                                        class="btn btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-1 py-1 px-2"
+                                        style="z-index: 2;" ng-click="hidePriceField()">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </div>
+
+                                <div class="text-danger" style="font-size: 0.875em;">
+                                    <div
+                                        ng-show="variantForm.Giathoidiemhientai.$touched && variantForm.Giathoidiemhientai.$error.required">
+                                        Không được để trống giá bán
+                                    </div>
+                                    <div
+                                        ng-show="variantForm.Giathoidiemhientai.$touched && variantForm.Giathoidiemhientai.$error.min">
+                                        Giá bán phải lớn hơn hoặc bằng 1000
+                                    </div>
+                                    <div
+                                        ng-show="variantForm.Giathoidiemhientai.$touched && variantForm.Giathoidiemhientai.$error.max">
+                                        Giá bán không được vượt quá 100 triệu
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Ảnh -->
+                            <div class="mb-2 mt-3 position-relative">
+                                <label class="btn-upload" for="imageUpload" ng-show="!newVariant.UrlHinhanh">
+                                    <i class="bi bi-camera-fill"></i> Thêm Hình Ảnh
+                                </label>
+
+                                <input type="file" id="imageUpload" class="hidden-input"
+                                    onchange="angular.element(this).scope().handleFileSelect(event, 'newVariant')"
+                                    ng-show="!newVariant.UrlHinhanh || allowReplaceImage" />
+
+                                <div class="position-relative d-inline-block mt-2" ng-if="newVariant.UrlHinhanh">
+                                    <img ng-src="{{ newVariant.UrlHinhanh.startsWith('data:') ? newVariant.UrlHinhanh : 'https://localhost:7196/picture/' + newVariant.UrlHinhanh }}"
+                                        alt="Ảnh biến thể" class="img-thumbnail" style="width: 150px; height: 150px;">
+
+                                    <button type="button"
+                                        class="btn btn-danger btn-sm position-absolute top-0 start-100 translate-middle"
+                                        ng-click="removeImage('newVariant')">
+                                        X
+                                    </button>
+
+                                </div>
+                                <span class="text-danger" ng-show="variantForm.$submitted && !newVariant.UrlHinhanh">
+                                    Bạn cần thêm một hình ảnh cho biến thể sản phẩm.
+                                </span>
+
+                                <!-- Trạng thái -->
+                                <div class="form-check form-switch mt-3">
+                                    <label>Trạng thái: </label>
+                                    <input class="form-check-input" type="checkbox" id="variantStatus{{$index}}"
+                                        ng-model="newVariant.Trangthai" ng-true-value="0" ng-false-value="2">
+                                    <label class="form-check-label" for="variantStatus{{$index}}">
+                                        {{ newVariant.Trangthai === 0 ? 'Bật' : 'Tắt' }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nút lưu / cập nhật -->
+                    <button type="submit" class="btn btn-success w-100 mt-3">
+                        {{ isEditing ? 'Cập nhật' : 'Lưu' }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalThuongHieu" tabindex="-1" aria-labelledby="modalThuongHieuLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm Thương Hiệu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control mb-2" placeholder="Tên thương hiệu" ng-model="newThuongHieu" />
+                <button class="btn btn-success mb-3" ng-click="addThuongHieu()">Thêm</button>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="th in categories0">{{ th.tenthuonghieu }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalSize" tabindex="-1" aria-labelledby="modalSizeLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm Size</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="number" class="form-control mb-2" placeholder="Nhập số size (30 - 50)" ng-model="newSize"
+                    ng-keydown="blockInvalidKeys($event)" />
+                <button class="btn btn-success mb-3" ng-click="addSize()">Thêm</button>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="sz in sizes0">{{ sz.sosize }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalMauSac" tabindex="-1" aria-labelledby="modalMauSacLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm Màu Sắc</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control mb-2" placeholder="Tên màu" ng-model="newColor.tenmau" />
+                <input type="color" class="form-control form-control-color mb-2" ng-model="newColor.mamau" />
+                <button class="btn btn-success mb-3" ng-click="addColor()">Thêm</button>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex align-items-center" ng-repeat="color in colors0">
+                        <span class="me-2" ng-style="{ 'background-color': color.mamau }"
+                            style="width: 60px; height: 30px; border: 1px solid #ccc;"></span>
+                        {{ color.tenmau }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalChatLieu" tabindex="-1" aria-labelledby="modalChatLieuLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm Chất Liệu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control mb-2" placeholder="Tên chất liệu" ng-model="newChatLieu" />
+                <button class="btn btn-success mb-3" ng-click="addChatLieu()">Thêm</button>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="cl in chatlieus0">{{ cl.tenchatlieu }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

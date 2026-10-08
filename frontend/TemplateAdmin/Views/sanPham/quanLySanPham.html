@@ -1,0 +1,366 @@
+<style>
+  .btn-add {
+    background-color: #28a745;
+    color: #fff;
+  }
+
+  .btn-delete {
+    background-color: #dc3545;
+    color: #fff;
+  }
+
+  .btn-excel {
+    background-color: #28a745;
+    color: #fff;
+  }
+
+  .btn-delete:hover,
+  .btn-add:hover,
+  .btn-excel:hover {
+    opacity: 0.8;
+  }
+
+  .badge-success {
+    background-color: #28a745;
+    color: white;
+  }
+
+  .element-button .btn {
+    margin-right: 2px;
+  }
+
+  .form-switch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-tabs {
+    display: flex;
+    width: 100%;
+  }
+
+  .nav-tabs .nav-link {
+    flex-grow: 1;
+    text-align: center;
+    padding: 10px 20px;
+  }
+
+  .product-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+</style>
+
+
+<div class="container">
+  <div class="card my-3">
+    <div class="d-flex justify-content-between p-2 mt-2">
+      <button class="btn btn-sm btn-outline-secondary me-2" onclick="history.back()">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+      <h5 >DANH SÁCH SẢN PHẨM</h5>
+      <span>{{ time }}</span>
+    </div>
+  </div>
+
+
+  <div class="border rounded shadow-sm p-3 bg-white">
+    <div class="row element-button mb-3 g-2">
+      <div class="col-auto">
+        <a class="btn btn-add btn-sm" href="#!addSanPham" title="Thêm"><i class="fas fa-plus"></i> Tạo mới sản phẩm</a>
+      </div>
+      
+    </div>
+    <hr>
+    <nav>
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button"
+          role="tab" aria-controls="nav-home" aria-selected="true">Tất cả</button>
+        <button class="nav-link" id="nav-HoatDong-tab" data-bs-toggle="tab" data-bs-target="#nav-HoatDong" type="button"
+          role="tab" aria-controls="nav-HoatDong" aria-selected="false">Hoạt động</button>
+        <button class="nav-link" id="nav-HetHang-tab" data-bs-toggle="tab" data-bs-target="#nav-HetHang" type="button"
+          role="tab" aria-controls="nav-HetHang" aria-selected="false">Hết hàng</button>
+        <button class="nav-link" id="nav-TatHoatDong-tab" data-bs-toggle="tab" data-bs-target="#nav-TatHoatDong"
+          type="button" role="tab" aria-controls="nav-TatHoatDong" aria-selected="false">Tắt hoạt động</button>
+      </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <!-- Bộ lọc hiển thị số lượng -->
+          <div class="d-flex align-items-center">
+            <label for="show-entries" class="me-2">Hiện</label>
+            <select id="show-entries" class="form-select form-select-sm" style="width: auto;" ng-model="entriesPerPage"
+              ng-change="updatePagination()">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+            <span class="ms-2">danh mục</span>
+          </div>
+
+          <!-- Ô tìm kiếm -->
+          <div class="mt-3 me-3">
+            <input id="search-input" type="text" class="form-control form-control-sm" style="width: 300px;"
+              ng-model="searchText" placeholder="Tìm kiếm sản phẩm...">
+          </div>
+        </div>
+
+        <!-- Bảng dữ liệu -->
+        <table class="table table-bordered table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>STT</th>
+              <th>Tên sản phẩm</th>
+              <th>Ảnh</th>
+              <th>Số lượng</th>
+              <th>Tình trạng</th>
+              <th>Giá tiền</th>
+              <th>Ngày thêm mới</th>
+              <th>Thương hiệu</th>
+              <th>Chức năng</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              ng-repeat="product in filteredProducts = (productsALL | searchByName:searchText) | startFrom:(currentPage-1)*entriesPerPage | limitTo:entriesPerPage"
+              ng-click="goToProductDetail(product.id)" style="cursor: pointer;">
+              <td>{{ ($index + 1) + (currentPage - 1) * entriesPerPage }}</td>
+
+              <td>{{product.tenSanpham}}</td>
+              <td>
+                <img ng-src="https://localhost:7196/picture/{{product.image}}" alt="Ảnh sản phẩm"
+                  class="img-thumbnail product-img">
+              </td>
+              <td>{{product.soluong}}</td>
+              <td>
+                <span class="badge badge-success" ng-if="product.soluong > 0">Còn hàng</span>
+                <span class="badge bg-secondary" ng-if="product.soluong === 0">Hết hàng</span>
+              </td>
+              <td>{{product.giaBan | currency:"":0}}₫</td>
+              <td>{{product.ngayThemMoi | date:'dd/MM/yyyy'}}</td>
+              <td>{{getCategoriesName(product.idth)}}</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <button class="btn btn-danger btn-sm" ng-click="deleteProduct(product); $event.stopPropagation()"><i
+                      class="fas fa-trash"></i></button>
+
+                  <a class="btn btn-warning btn-sm" href="#!/editSanPham/{{product.id}}"
+                    ng-click="$event.stopPropagation()"><i class="fas fa-edit"></i></a>
+
+                  <div class="form-switch" ng-if="product.trangThai !== 1">
+                    <input class="form-check-input" type="checkbox" id="toggle-{{product.id}}"
+                      ng-model="product.trangThaiSwitch" ng-change="toggleProductStatus(product)"
+                      ng-click="$event.stopPropagation()">
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Thông tin phân trang -->
+        <div class="d-flex justify-content-between align-items-center">
+          <span>Hiện {{ (currentPage - 1) * entriesPerPage + 1 }} đến
+            {{ getToIndex() }}
+            của {{ filteredProducts.length }} sản phẩm</span>
+
+          <nav aria-label="Pagination">
+            <ul class="pagination mb-0">
+              <li class="page-item" ng-class="{disabled: currentPage === 1}">
+                <button class="page-link" ng-click="changePage(currentPage - 1)">Lùi</button>
+              </li>
+              <li class="page-item" ng-repeat="page in getPageNumbers()" ng-class="{active: currentPage === page}">
+                <button class="page-link" ng-click="changePage(page)">{{page}}</button>
+              </li>
+              <li class="page-item" ng-class="{disabled: currentPage === getPageNumbers().length}">
+                <button class="page-link" ng-click="changePage(currentPage + 1)">Tiếp</button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+      </div>
+      <div class="tab-pane fade" id="nav-HoatDong" role="tabpanel" aria-labelledby="nav-HoatDong-tab">
+      
+        <table class="table table-bordered table-hover mt-5" ng-if="productsStatus0.length > 0">
+          <thead class="table-light">
+            <tr>
+              <th>STT</th>
+              <th>Tên sản phẩm</th>
+              <th>Ảnh</th>
+              <th>Số lượng</th>
+              <th>Tình trạng</th>
+              <th>Giá tiền</th>
+              <th>Ngày thêm mới</th>
+              <th>Thương hiệu</th>
+              <th>Chức năng</th>
+            </tr>
+          </thead>
+          <tbody ng-repeat="product in productsStatus0">
+            <tr ng-click="goToProductDetail(product.id)" style="cursor: pointer;">
+              <td>{{ ($index + 1) + (currentPage - 1) * entriesPerPage }}</td>
+
+              <td>{{product.tenSanpham}}</td>
+              <td><img src="https://localhost:7196/picture/{{product.image}}" alt="Ảnh sản phẩm"
+                  class="img-thumbnail product-img">
+              </td>
+              <td>{{product.soluong}}</td>
+              <td>
+                <span class="badge badge-success" ng-if="product.soluong > 0">Còn hàng</span>
+                <span class="badge bg-secondary" ng-if="product.soluong === 0">Hết hàng</span>
+              </td>
+
+              <td>{{product.giaBan | currency:"":0}}₫</td>
+              <td>{{product.ngayThemMoi | date:'dd/MM/yyyy'}}</td>
+              <td>{{getCategoriesName(product.idth)}}</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <button class="btn btn-danger btn-sm" ng-click="deleteProduct(product); $event.stopPropagation()"><i
+                      class="fas fa-trash"></i></button>
+
+                  <a class="btn btn-warning btn-sm" href="#!/editSanPham/{{product.id}}"
+                    ng-click="$event.stopPropagation()"><i class="fas fa-edit"></i></a>
+
+                  <div class="form-switch" ng-if="product.trangThai !== 1">
+                    <input class="form-check-input" type="checkbox" id="toggle-{{product.id}}"
+                      ng-model="product.trangThaiSwitch" ng-change="toggleProductStatus(product)"
+                      ng-click="$event.stopPropagation()">
+                  </div>
+                </div>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div ng-if="productsStatus0.length === 0" class="text-center mt-3">
+          <p>Không có sản phẩm nào trong danh sách này.</p>
+        </div>
+
+      </div>
+      <div class="tab-pane fade" id="nav-HetHang" role="tabpanel" aria-labelledby="nav-HetHang-tab">
+        
+        <table class="table table-bordered table-hover mt-5" ng-if="productsStatus1.length > 0">
+          <thead class="table-light">
+            <tr>
+              <th>STT</th>
+              <th>Tên sản phẩm</th>
+              <th>Ảnh</th>
+              <th>Số lượng</th>
+              <th>Tình trạng</th>
+              <th>Giá tiền</th>
+              <th>Ngày thêm mới</th>
+              <th>Thương hiệu</th>
+              <th>Chức năng</th>
+            </tr>
+          </thead>
+          <tbody ng-repeat="product in productsStatus1">
+            <tr ng-click="goToProductDetail(product.id)" style="cursor: pointer;">
+              <td>{{ ($index + 1) + (currentPage - 1) * entriesPerPage }}</td>
+
+              <td>{{product.tenSanpham}}</td>
+              <td><img src="https://localhost:7196/picture/{{product.image}}" alt="Ảnh sản phẩm"
+                  class="img-thumbnail product-img">
+              </td>
+              <td>{{product.soluong}}</td>
+              <td>
+                <span class="badge badge-success" ng-if="product.soluong > 0">Còn hàng</span>
+                <span class="badge bg-secondary" ng-if="product.soluong === 0">Hết hàng</span>
+              </td>
+
+              <td>{{product.giaBan | currency:"":0}}₫</td>
+              <td>{{product.ngayThemMoi | date:'dd/MM/yyyy'}}</td>
+              <td>{{getCategoriesName(product.idth)}}</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <button class="btn btn-danger btn-sm" ng-click="deleteProduct(product); $event.stopPropagation()"><i
+                      class="fas fa-trash"></i></button>
+
+                  <a class="btn btn-warning btn-sm" href="#!/editSanPham/{{product.id}}"
+                    ng-click="$event.stopPropagation()"><i class="fas fa-edit"></i></a>
+
+                  <div class="form-switch" ng-if="product.trangThai !== 1">
+                    <input class="form-check-input" type="checkbox" id="toggle-{{product.id}}"
+                      ng-model="product.trangThaiSwitch" ng-change="toggleProductStatus(product)"
+                      ng-click="$event.stopPropagation()">
+                  </div>
+                </div>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div ng-if="productsStatus1.length === 0" class="text-center mt-3">
+          <p>Không có sản phẩm nào trong danh sách này.</p>
+        </div>
+
+      </div>
+      <div class="tab-pane fade" id="nav-TatHoatDong" role="tabpanel" aria-labelledby="nav-contact-tab">
+    
+
+        <table class="table table-bordered table-hover mt-5" ng-if="productsStatus2.length > 0">
+          <thead class="table-light">
+            <tr>
+              <th>STT</th>
+              <th>Tên sản phẩm</th>
+              <th>Ảnh</th>
+              <th>Số lượng</th>
+              <th>Tình trạng</th>
+              <th>Giá tiền</th>
+              <th>Ngày thêm mới</th>
+              <th>Thương hiệu</th>
+              <th>Chức năng</th>
+            </tr>
+          </thead>
+          <tbody ng-repeat="product in productsStatus2">
+            <tr ng-click="goToProductDetail(product.id)" style="cursor: pointer;">
+              <td>{{ ($index + 1) + (currentPage - 1) * entriesPerPage }}</td>
+
+              <td>{{product.tenSanpham}}</td>
+              <td><img src="https://localhost:7196/picture/{{product.image}}" alt="Ảnh sản phẩm"
+                  class="img-thumbnail product-img">
+              </td>
+              <td>{{product.soluong}}</td>
+              <td>
+                <span class="badge badge-success" ng-if="product.soluong > 0">Còn hàng</span>
+                <span class="badge bg-secondary" ng-if="product.soluong === 0">Hết hàng</span>
+              </td>
+
+              <td>{{product.giaBan | currency:"":0}}₫</td>
+              <td>{{product.ngayThemMoi | date:'dd/MM/yyyy'}}</td>
+              <td>{{getCategoriesName(product.idth)}}</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <button class="btn btn-danger btn-sm" ng-click="deleteProduct(product); $event.stopPropagation()"><i
+                      class="fas fa-trash"></i></button>
+
+                  <a class="btn btn-warning btn-sm" href="#!/editSanPham/{{product.id}}"
+                    ng-click="$event.stopPropagation()"><i class="fas fa-edit"></i></a>
+
+                  <div class="form-switch" ng-if="product.trangThai !== 1">
+                    <input class="form-check-input" type="checkbox" id="toggle-{{product.id}}"
+                      ng-model="product.trangThaiSwitch" ng-change="toggleProductStatus(product)"
+                      ng-click="$event.stopPropagation()">
+                  </div>
+                </div>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div ng-if="productsStatus2.length === 0" class="text-center mt-3">
+          <p>Không có sản phẩm nào trong danh sách này.</p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+</div>

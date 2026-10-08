@@ -1,0 +1,543 @@
+<style>
+    .rating-filter {
+        background: #fff7f2;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+
+    .rating-summary {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .filter-buttons button {
+        border: 1px solid #ccc;
+        padding: 8px 12px;
+        margin: 5px;
+        cursor: pointer;
+    }
+
+    .filter-buttons .active {
+        background: #ff5a3c;
+        color: white;
+        border: none;
+    }
+
+    :root {
+        --primary-color: #dc3545;
+        --secondary-color: #f8f9fa;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .product-title {
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .product-info {
+        margin-bottom: 0.5rem;
+    }
+
+    .product-info span {
+        font-weight: 600;
+    }
+
+    .price-original {
+        text-decoration: line-through;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .price-current {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .discount-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #ffc107;
+        color: #000;
+        padding: 5px 10px;
+        font-weight: bold;
+        border-radius: 3px;
+    }
+
+    .size-option {
+        width: 45px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        cursor: pointer;
+        border: 1px solid #dee2e6;
+        background-color: #fff;
+        transition: all 0.3s ease;
+    }
+
+    .size-option.active {
+        border-color: #000 !important;
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+
+    .chatlieu-option {
+        width: 45px;
+        height: auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        cursor: pointer;
+        border: 1px solid #dee2e6;
+        background-color: #fff;
+        transition: all 0.3s ease;
+    }
+
+    .chatlieu-option.active {
+        border-color: #000;
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+    }
+
+    .quantity-btn {
+        width: 40px;
+        height: 40px;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .quantity-input {
+        width: 60px;
+        height: 40px;
+        border: 1px solid #dee2e6;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .btn-add-cart {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        font-weight: bold;
+    }
+
+    .btn-buy-now {
+        background-color: #000;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        font-weight: bold;
+    }
+
+    .btn-wishlist {
+        background-color: transparent;
+        border: none;
+        font-size: 1.5rem;
+        color: #6c757d;
+    }
+
+    .btn-wishlist:hover,
+    .btn-wishlist.active {
+        color: var(--primary-color);
+    }
+
+    .thumbnail-img {
+        width: 100%;
+        height: 100px;
+        object-fit: cover;
+        cursor: pointer;
+        border: 1px solid #dee2e6;
+        margin-bottom: 10px;
+    }
+
+    .thumbnail-img:hover,
+    .thumbnail-img.active {
+        border: 2px solid #000;
+    }
+
+    .main-img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+
+    .product-description {
+        margin-top: 2rem;
+    }
+
+    .product-description h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    /* Comments section styles */
+    .rating i {
+        cursor: pointer;
+        margin-right: 2px;
+    }
+
+    .comment-item {
+        transition: all 0.2s ease;
+    }
+
+    .comment-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Related products styles */
+    .related-products .card {
+        border: 1px solid #dee2e6;
+        transition: all 0.3s ease;
+    }
+
+    .related-products .card:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .related-products .card-img-top {
+        object-fit: cover;
+        height: 200px;
+    }
+
+    .related-products .card-title {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .related-products .card-title {
+            font-size: 0.9rem;
+        }
+
+        .comment-item {
+            padding: 0.5rem !important;
+        }
+    }
+
+    .color-option {
+        position: relative;
+        width: 40px;
+        /* Độ rộng cố định */
+        height: 40px;
+        /* Độ cao cố định */
+        border-radius: 50%;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        border: 2px solid #ccc;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .color-option.active {
+        border-color: #000;
+    }
+
+    .color-option .color-check {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 18px;
+        font-weight: bold;
+        color: white;
+        /* Màu chữ của dấu tích */
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .review-user {
+        color: #333;
+    }
+
+    .review-rating {
+        color: #f39c12;
+        /* Màu vàng cho sao */
+        font-size: 14px;
+    }
+
+    .review-content {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 8px;
+    }
+
+    .review-images {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    /* Modal hiển thị ảnh */
+    #imageModal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Ảnh trong modal */
+    #modalImg {
+        max-width: 80%;
+        max-height: 80%;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.5);
+    }
+
+    /* Đóng modal khi click ra ngoài */
+    #imageModal::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+        .review {
+        border: 2px solid #ccc;
+        padding: 10px;
+        margin: 7px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .review-user {
+            color: #333;
+        }
+
+        .review-rating {
+            color: #ff9800; /* Màu sao vàng */
+        }
+
+        .review-content {
+            font-size: 14px;
+            color: #555;
+        }
+
+    /* Ảnh nhỏ */
+    .review-img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .review-img:hover {
+        transform: scale(1.1);
+    }
+
+    .collapse-content {
+    display: none; /* Mặc định ẩn */
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+    }
+    .collapse-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        width: 100%;
+        text-align: center;
+    }
+    .collapse-btn.active::after {
+        content: "▲";
+    }
+    .pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    }
+
+    .pagination-container button {
+        background-color: #f1f1f1;
+        border: 1px solid #ccc;
+        padding: 5px 10px;
+        margin: 2px;
+        cursor: pointer;
+    }
+
+    .pagination-container button.active {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .pagination-container button:disabled {
+        background-color: #ddd;
+        cursor: not-allowed;
+    }
+    .product-image {
+    width: 200px;  
+    height: auto;  
+    object-fit: cover; /* Giữ tỷ lệ ảnh đẹp, không méo */
+    display: block; /* Loại bỏ khoảng trắng dư thừa */
+    margin: auto;  /* Căn giữa theo chiều ngang */
+}
+
+</style>
+<div class="container py-5">
+    <div class="row">
+        <!-- Thumbnails -->
+        <div class="col-md-1 d-none d-md-block" id="anhsanpham">
+            <div class="thumbnail-container">
+                <!-- Ảnh sản phẩm sẽ được thêm vào đây bằng JavaScript -->
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="position-relative">
+                <img src="/placeholder.svg?height=500&width=500" class="main-img" id="main-product-image"
+                    alt="Sản phẩm">
+            </div>
+        </div>
+
+        <!-- Product Details -->
+        <div class="col-md-6" id="dulieusanpham">
+            <h1 class="product-title">Tên sản phẩm</h1>
+
+            <div class="product-info"><span>Trạng thái:</span> <span id="product-status">Đang cập nhật...</span></div>
+            <div class="product-info"><span>Thương hiệu:</span> <span id="product-category">Đang cập nhật...</span>
+            </div>
+
+            <div class="mb-3">
+                <div class="price-current" id="price-current">0đ</div>
+                <div class="price-original" id="price-original">Giá gốc: 0đ (-0%)</div>
+            </div>
+
+            <div class="mb-3">
+                <div class="product-info mb-2">
+                    <span>Màu:</span>
+                </div>
+                <div class="color-options">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <div class="product-info mb-2">
+                    <span>Size:</span>
+                </div>
+                <div class="size-options">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <div class="product-info mb-2">
+                    <span>Chất Liệu:</span>
+                </div>
+                <div class="chatlieu-options">
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <div class="product-info mb-2">
+                    <span>Số lượng:</span>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="quantity-selector me-3">
+                        <div class="quantity-btn" id="decrease-quantity">-</div>
+                        <input type="text" class="quantity-input" id="quantity" value="1" readonly>
+                        <div class="quantity-btn" id="increase-quantity">+</div>
+                    </div>
+
+                    <button class="btn btn-add-cart me-2" id="addtocart">Thêm vào giỏ</button>
+                    <a href="" class="btn btn-buy-now me-2" ng-click="muaSanphamNgay()">Mua ngay</a>
+                    <button id="btnResetSelections" class="btn btn-sm btn-danger" style="background-color: #0d6efd; color: white; padding: 10px 20px; border: none; font-weight: bold;">
+                        <i class="fas fa-times"></i> Đặt lại
+                    </button>
+
+                </div>
+            </div>
+
+            <div class="product-description">
+                <h3>Mô tả</h3>
+                <div id="product-detail">
+                </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="rating-filter">
+                <h3>ĐÁNH GIÁ SẢN PHẨM</h3>
+                <div class="rating-summary">
+                    <span class="rating-score" id="avgRating">Đang tính...</span>
+                    <span class="stars" id="starDisplay">★★★★★</span>
+                </div>
+                <div class="filter-buttons" id="filterContainer"></div>
+            
+                <!-- Nút thu gọn/mở rộng -->
+                <button id="toggleReviews" class="collapse-btn">Xem đánh giá ▼</button>
+            
+                <div id="reviews" class="collapse-content">
+                    <!-- Đánh giá sẽ được hiển thị ở đây -->
+                </div>
+            
+                <!-- Khu vực phân trang -->
+                <div id="pagination" class="pagination-container"></div>
+            </div>                   
+        </div>
+        <!-- Related Products Section -->
+        <div class="related-products mt-5">
+            <h3 class="mb-4">Sản phẩm liên quan</h3>
+            <div class="row" id="related-products-container">
+                <!-- Dữ liệu sản phẩm sẽ được tải động từ JavaScript -->
+            </div>
+        </div>        
+    </div>
+</div>
+<!-- Modal hiển thị ảnh lớn -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+      <div class="modal-content bg-dark">
+        <div class="modal-header border-0">
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body d-flex justify-content-center align-items-center">
+          <img id="modalImg" src="" class="img-fluid mw-100 mh-100" alt="Ảnh lớn">
+        </div>
+      </div>
+    </div>
+  </div>

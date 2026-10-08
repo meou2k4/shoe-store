@@ -1,0 +1,96 @@
+<div class="container-fluid">
+    <!-- Header với nút quay lại và tiêu đề -->
+    <div class="d-flex align-items-center mb-4">
+        <button class="btn btn-sm btn-outline-secondary me-3" onclick="history.back()">
+            <i class="fas fa-arrow-left me-1"></i> Quay lại
+        </button>
+        <h3 class="mb-0">Quản Lý Size</h3>
+    </div>
+
+    <!-- Card chứa toàn bộ nội dung -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Danh Sách Size</h5>
+            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#sizeModal" ng-click="resetSize()">
+                <i class="fas fa-plus me-1"></i> Thêm Size
+            </button>
+        </div>
+        
+        <div class="card-body">
+            <!-- Bảng danh sách size -->
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th width="40%">Số Size</th>
+                            <th width="30%">Trạng Thái</th>
+                            <th width="30%">Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="size in sizes">
+                            <td>{{ size.sosize }}</td>
+                            <td>
+                                <span class="badge" ng-class="size.trangthai == 0 ? 'bg-success' : 'bg-secondary'">
+                                    {{ size.trangthai == 0 ? 'Hoạt động' : 'Không hoạt động' }}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-outline-warning btn-sm me-1" data-bs-toggle="modal" 
+                                    data-bs-target="#sizeModal" ng-click="editSize(size)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" ng-click="deleteSize(size.id)" 
+                                    ng-if="!size.isUsedInProduct">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr ng-if="sizes.length === 0">
+                            <td colspan="3" class="text-center text-muted py-3">Không có dữ liệu size</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal thêm/cập nhật size -->
+<div class="modal fade" id="sizeModal" tabindex="-1" aria-labelledby="sizeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sizeModalLabel">{{ editingSize ? 'Cập Nhật Size' : 'Thêm Size' }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Nhập số size -->
+                <div class="mb-3">
+                    <label for="sosize" class="form-label">Số Size <span class="text-danger">*</span></label>
+                    <input type="number" id="sosize" class="form-control" ng-model="newSize.sosize"
+                        placeholder="Nhập số size (30 - 50)" required ng-change="validateSize()">
+                    <div class="text-danger small mt-1" ng-if="formError1.sosize">{{ formError1.sosize }}</div>
+                </div>
+
+                <!-- Trạng thái -->
+                <div class="mb-3 form-check form-switch">
+                    <input type="checkbox" class="form-check-input" id="sizeStatus" 
+                        ng-model="newSize.trangthai" ng-true-value="0" ng-false-value="2">
+                    <label class="form-check-label" for="sizeStatus">Hoạt động</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button class="btn btn-primary" ng-click="addSize()" ng-if="!editingSize" 
+                    ng-disabled="!newSize.sosize || formError1.sosize">
+                    <i class="fas fa-save me-1"></i> Lưu
+                </button>
+                <button class="btn btn-warning" ng-click="updateSize()" ng-if="editingSize"
+                    ng-disabled="!newSize.sosize || formError1.sosize">
+                    <i class="fas fa-sync-alt me-1"></i> Cập nhật
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

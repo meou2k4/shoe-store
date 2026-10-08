@@ -1,0 +1,281 @@
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .card {
+        transition: 0.3s;
+        border: none;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-img-container {
+        position: relative;
+        width: 100%;
+    }
+
+    .card img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+
+    .flash-sale-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: linear-gradient(45deg, #ff416c, #ff4b2b);
+        color: white;
+        padding: 6px 12px;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 5px;
+        z-index: 10;
+    }
+    .disabled-card {
+    opacity: 0.5;
+    pointer-events: none;
+    }
+
+.disabled-link {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+    .discount-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #ffcc00;
+        color: #222;
+        padding: 6px 12px;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 5px;
+        z-index: 10;
+    }
+
+    .countdown {
+        font-size: 14px;
+        font-weight: bold;
+        color: white;
+    }
+
+    .showall {
+        color: black;
+    }
+
+    .showall:hover {
+        color: red;
+    }
+
+    /* Giới hạn chiều cao tbody và thêm thanh cuộn */
+    .table-container {
+        max-height: 400px;
+        /* Điều chỉnh phù hợp với chiều cao 20 hàng */
+        overflow-y: auto;
+        display: block;
+    }
+
+    /* Cố định tiêu đề bảng */
+    thead {
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 2;
+    }
+
+    /* Định dạng bảng */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+        vertical-align: middle;
+    }
+
+    /* Hình ảnh user */
+    .user-img {
+        border-radius: 50%;
+        border: 2px solid black;
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+    }
+    
+</style>
+
+<div class="container"><!-- Product Page Content -->
+    <div ng-controller="SanphamController">
+        <div class="row">
+            <!-- Filter Sidebar -->
+            <div class="col-lg-3">
+                <div class="filter-sidebar p-3 border rounded">
+                    <h5 class="mb-3"><i class="bi bi-funnel"></i> Lọc sản phẩm</h5>
+                    <h6 class="mb-3">Giá</h6>
+                    <!-- Price Filte giangr -->
+                    <div class="mt-3">
+                        <label class="form-label">Từ</label>
+                        <input type="number" class="form-control mb-2" ng-model="searchParams.giaMin"
+                               placeholder="Nhập giá thấp nhất" >
+                        <label class="form-label">Đến</label>
+                        <input type="number" class="form-control mb-3" ng-model="searchParams.giaMax"
+                               placeholder="Nhập giá cao nhất" >
+                               <div class="text-danger text-center mt-2" ng-if="errorMessage1">
+                                {{ errorMessage1 }}
+                            </div>
+                      </div>
+
+                    <!-- Brand Filter -->
+                    <div class="filter-section mb-4">
+                        <h6 class="mb-3">Thương hiệu</h6>
+                        <div class="form-check mb-2" ng-repeat="Brand in categories0">
+                            <input class="form-check-input" type="checkbox"
+                                   id="Brand{{Brand.id}}"
+                                   ng-model="Brand.selected"
+                                   ng-change="updateSelectedThuongHieu()" />
+                            <label class="form-check-label" for="Brand{{Brand.id}}">
+                                {{Brand.tenthuonghieu}}
+                            </label>
+                        </div>
+                        
+                       
+                    </div>
+
+                    <!-- Size Filter -->
+                    <div class="filter-section">
+                        <h6 class="mb-3">Size</h6>
+                        <div class="form-check mb-2" ng-repeat="size in sizes0">
+                            <input class="form-check-input" type="checkbox"
+                                   id="size{{size.id}}"
+                                   ng-model="size.selected"
+                                   ng-change="updateSelectedSize()" />
+                            <label class="form-check-label" for="size{{size.id}}">
+                                {{size.sosize}}
+                            </label>
+                        </div>
+                        
+                       
+                    </div>
+
+                    <!-- Apply Filter Button -->
+                    <button class="btn btn-primary w-100 mt-4" ng-click="applyFilters()">Áp dụng</button>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="col-lg-9">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4>Tất cả sản phẩm</h4>
+                    <div class="d-flex align-items-center">
+                        <label class="me-2">Sắp xếp theo:</label>
+                        <select class="form-select form-select-sm" style="width: auto;" ng-model="sortOption"
+                            ng-change="sortProducts()">
+                            <option value="newest">Date: Mới nhất</option>
+                            <option value="oldest">Date: Cũ nhất</option>
+                            <option value="lowToHigh">Giá: Thấp đến cao</option>
+                            <option value="highToLow">Giá: Cao đến thấp</option>
+                            <option value="bestseller">Bán chạy nhất</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div ng-if="errorMessage" class="alert alert-warning text-center mt-3">
+                        {{errorMessage}}
+                    </div>
+                    <div ng-if="!errorMessage && products.length === 0" class="alert alert-info text-center mt-3">
+                        Không có sản phẩm nào phù hợp với tiêu chí tìm kiếm của bạn.
+                    </div>
+                    
+                    <div class="col-md-4 mb-4" ng-if="!errorMessage" ng-repeat="product in getPagedProducts()">
+                        <a href="#!SanpDetail/{{product.id}}" style="text-decoration: none;"
+                        ng-class="{'disabled-link': product.soluong === 0}">
+                            <div class="card rounded-0"
+                            ng-class="{'disabled-card': product.soluong === 0}">
+                                <div class="card-img-container">
+                                    <div class="discount-badge"
+                                        ng-if="product.giaTriGiam > 0 && product.giaTriGiam <= 100 && product.soluong > 0">
+                                        -{{product.giaTriGiam}}%</div>
+                                    <div class="discount-badge"
+                                        ng-if="product.giaTriGiam > 0 && product.giaTriGiam > 100 && product.soluong > 0">
+                                        -{{product.giaTriGiam| number : 0}}VNĐ</div>
+                                    <img ng-src="{{product.hinhAnh}}" alt="Ảnh sản phẩm" height="300px"
+                                        class="card-img-top  rounded-0" alt="...">
+                                </div>
+                                <div class="card-body">
+
+                                    <h5 class="card-title">{{product.tensp}}</h5>
+                                    <div class="d-flex justify-content-between">
+                                        <!-- Nếu có giảm giá thì hiển thị giá gốc gạch ngang -->
+                                        <div class="p-2 text-decoration-line-through text-start "
+                                            ng-if="product.giaban > product.giasale && product.giasale !== product.giaban">
+                                            {{product.giaban| number : 0}}VNĐ
+                                        </div>
+                                        <div class="p-2 text-end text-danger fw-bold ms-auto"
+                                            ng-if="product.giasale === product.giaban">
+                                            {{product.giaban| number : 0}}VNĐ
+                                        </div>
+                                        <!-- Hiển thị giá sale nếu có giảm giá -->
+                                        <div class="p-2 text-end text-danger fw-bold"
+                                            ng-if="product.giaban > product.giasale && product.giasale !== product.giaban">
+                                            {{product.giasale| number : 0}}VNĐ
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between">
+                                        <div class="p-2 text-decoration-line-through text-start text-danger"><i
+                                                class="bi bi-heart-fill"></i></div>
+                                        <div class="p-2 text-end" style="font-size: 12px;">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="rating-stars">
+                                                    <span ng-repeat="star in generateStars(product.trungBinhDanhGia) track by $index">
+                                                        <i class="bi" ng-class="{
+                                                               'bi-star-fill text-warning': star === 'full',
+                                                               'bi-star-half text-warning': star === 'half',
+                                                               'bi-star text-muted': star === 'empty'
+                                                           }">
+                                                        </i>
+                                                    </span>
+                                                </div>
+                                                <div class="ms-2">
+                                                    <i>{{ getTotalSPCT(product) }} đã bán</i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <nav aria-label="Page navigation" class="mt-4" ng-if="!errorMessage">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" ng-class="{disabled: currentPage === 1}">
+                            <a class="page-link" ng-click="previousPage()">Trước</a>
+                        </li>
+                        <li class="page-item" ng-repeat="page in [].constructor(totalPages) track by $index"
+                            ng-class="{active: currentPage === ($index + 1)}">
+                            <a class="page-link" ng-click="goToPage($index + 1)">{{$index + 1}}</a>
+                        </li>
+                        <li class="page-item" ng-class="{disabled: currentPage === totalPages}">
+                            <a class="page-link" ng-click="nextPage()">Sau</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>

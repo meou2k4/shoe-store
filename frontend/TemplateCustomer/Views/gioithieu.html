@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giới Thiệu Về Mặt Hàng Giày | Brand Name</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #dc3545;
+            --secondary-color: #f8f9fa;
+            --dark-color: #212529;
+            --light-color: #ffffff;
+            --accent-color: #ffc107;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-color);
+            overflow-x: hidden;
+        }
+        
+        .section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/placeholder.svg?height=800&width=1600') no-repeat center center;
+            background-size: cover;
+            color: var(--light-color);
+            padding: 150px 0;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+        
+        .btn-primary-custom {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary-custom:hover {
+            background-color: #c82333;
+            border-color: #c82333;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-box {
+            padding: 30px;
+            border-radius: 10px;
+            background-color: var(--light-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .feature-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+        
+        .category-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .category-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: all 0.5s ease;
+        }
+        
+        .category-card:hover .category-img {
+            transform: scale(1.1);
+        }
+        
+        .category-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 20px;
+            color: var(--light-color);
+        }
+        
+        .category-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .process-step {
+            text-align: center;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .process-number {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .process-connector {
+            position: absolute;
+            top: 55px;
+            right: -50%;
+            width: 100%;
+            border-top: 2px dashed #dee2e6;
+        }
+        
+        .testimonial-card {
+            padding: 30px;
+            border-radius: 10px;
+            background-color: var(--light-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .testimonial-card::before {
+            content: '\201C';
+            font-size: 5rem;
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            color: #f8f9fa;
+            font-family: Georgia, serif;
+        }
+        
+        .testimonial-rating {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            margin-top: 1.5rem;
+        }
+        
+        .testimonial-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+        
+        .brand-values {
+            background-color: var(--secondary-color);
+        }
+        
+        .value-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+        
+        .stats-box {
+            text-align: center;
+            padding: 30px;
+            background-color: var(--light-color);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            height: 100%;
+        }
+        
+        .stats-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .cta-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('/placeholder.svg?height=600&width=1600') no-repeat center center;
+            background-size: cover;
+            color: var(--light-color);
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta-text {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .footer {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            padding: 60px 0 30px;
+        }
+        
+        .footer-title {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--light-color);
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--light-color);
+            padding-left: 5px;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #343a40;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light-color);
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #343a40;
+            margin-top: 30px;
+            color: #adb5bd;
+        }
+        
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section {
+                padding: 60px 0;
+            }
+            
+            .process-connector {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .section {
+                padding: 40px 0;
+            }
+            
+            .stats-number {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title" data-aos="fade-up">KHÁM PHÁ BỘ SƯU TẬP GIÀY CAO CẤP</h1>
+            <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200">Nơi phong cách gặp gỡ sự thoải mái - Thiết kế đẳng cấp, chất lượng vượt trội</p>
+            <a href="#categories" class="btn btn-primary-custom" data-aos="fade-up" data-aos-delay="400">KHÁM PHÁ NGAY</a>
+        </div>
+    </section>
+
+    <!-- Brand Story Section -->
+    <section class="section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <h2 class="section-title">Câu Chuyện Thương Hiệu</h2>
+                    <p>Được thành lập vào năm 2010, thương hiệu giày của chúng tôi bắt đầu từ một ước mơ đơn giản: tạo ra những đôi giày không chỉ đẹp mà còn cực kỳ thoải mái. Chúng tôi tin rằng mỗi bước đi đều quan trọng và xứng đáng được hỗ trợ bởi những đôi giày chất lượng cao.</p>
+                    <p>Từ một xưởng sản xuất nhỏ với chỉ 5 nhân viên, chúng tôi đã phát triển thành một thương hiệu được yêu thích trên toàn quốc với hơn 50 cửa hàng và đối tác phân phối.</p>
+                    <p>Mỗi đôi giày đều là kết quả của quá trình nghiên cứu kỹ lưỡng, thiết kế tỉ mỉ và sản xuất chuyên nghiệp, mang đến cho khách hàng trải nghiệm tuyệt vời nhất.</p>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <img src="/placeholder.svg?height=500&width=600" alt="Câu chuyện thương hiệu" class="img-fluid rounded">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Brand Values Section -->
+    <section class="section brand-values">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Giá Trị Cốt Lõi</h2>
+                <p class="lead">Những giá trị định hình mọi quyết định của chúng tôi</p>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-4" data-aos="fade-up">
+                    <div class="text-center">
+                        <div class="value-icon">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <h3>Chất Lượng</h3>
+                        <p>Chúng tôi không bao giờ thỏa hiệp về chất lượng. Mỗi đôi giày đều trải qua quy trình kiểm tra nghiêm ngặt trước khi đến tay khách hàng.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="text-center">
+                        <div class="value-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3>Bền Vững</h3>
+                        <p>Chúng tôi cam kết giảm thiểu tác động đến môi trường thông qua việc sử dụng vật liệu tái chế và quy trình sản xuất thân thiện với môi trường.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="text-center">
+                        <div class="value-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3>Đổi Mới</h3>
+                        <p>Chúng tôi liên tục nghiên cứu và phát triển công nghệ mới để tạo ra những đôi giày tốt hơn, thoải mái hơn và bền bỉ hơn.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Categories Section -->
+    <section class="section" id="categories">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Danh Mục Sản Phẩm</h2>
+                <p class="lead">Khám phá bộ sưu tập đa dạng của chúng tôi</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                    <div class="category-card">
+                        <img src="/placeholder.svg?height=300&width=400" alt="Giày Thể Thao" class="category-img">
+                        <div class="category-overlay">
+                            <h3 class="category-title">Giày Thể Thao</h3>
+                            <p>Hiệu suất cao, thoải mái tối đa cho mọi hoạt động thể thao</p>
+                            <a href="#" class="btn btn-sm btn-light">Xem Thêm</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="category-card">
+                        <img src="/placeholder.svg?height=300&width=400" alt="Giày Casual" class="category-img">
+                        <div class="category-overlay">
+                            <h3 class="category-title">Giày Casual</h3>
+                            <p>Phong cách hàng ngày, thoải mái và thời trang</p>
+                            <a href="#" class="btn btn-sm btn-light">Xem Thêm</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="category-card">
+                        <img src="/placeholder.svg?height=300&width=400" alt="Giày Chạy Bộ" class="category-img">
+                        <div class="category-overlay">
+                            <h3 class="category-title">Giày Chạy Bộ</h3>
+                            <p>Thiết kế đặc biệt cho người yêu chạy bộ, hỗ trợ tối đa</p>
+                            <a href="#" class="btn btn-sm btn-light">Xem Thêm</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="category-card">
+                        <img src="/placeholder.svg?height=300&width=400" alt="Giày Bóng Đá" class="category-img">
+                        <div class="category-overlay">
+                            <h3 class="category-title">Giày Bóng Đá</h3>
+                            <p>Kiểm soát bóng tối ưu, độ bám sân tuyệt vời</p>
+                            <a href="#" class="btn btn-sm btn-light">Xem Thêm</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="category-card">
+                        <img src="/placeholder.svg?height=300&width=400" alt="Giày Thời Trang" class="category-img">
+                        <div class="category-overlay">
+                            <h3 class="category-title">Giày Thời Trang</h3>
+                            <p>Thiết kế hiện đại, phong cách đẳng cấp</p>
+                            <a href="#" class="btn btn-sm btn-light">Xem Thêm</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
+                    <div class="category-card">
+                        <img src="/placeholder.svg?height=300&width=400" alt="Giày Trẻ Em" class="category-img">
+                        <div class="category-overlay">
+                            <h3 class="category-title">Giày Trẻ Em</h3>
+                            <p>An toàn, thoải mái và đáng yêu cho các bé</p>
+                            <a href="#" class="btn btn-sm btn-light">Xem Thêm</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Tại Sao Chọn Chúng Tôi</h2>
+                <p class="lead">Những lý do khiến khách hàng tin tưởng thương hiệu của chúng tôi</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
+                    <div class="feature-box">
+                        <div class="feature-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3>Chất Lượng Vượt Trội</h3>
+                        <p>Chúng tôi chỉ sử dụng những vật liệu tốt nhất và quy trình sản xuất tiên tiến để đảm bảo mỗi đôi giày đều có chất lượng vượt trội.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-box">
+                        <div class="feature-icon">
+                            <i class="fas fa-tshirt"></i>
+                        </div>
+                        <h3>Thiết Kế Độc Đáo</h3>
+                        <p>Đội ngũ thiết kế của chúng tôi luôn cập nhật xu hướng thời trang mới nhất để tạo ra những mẫu giày độc đáo và thời trang.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-box">
+                        <div class="feature-icon">
+                            <i class="fas fa-thumbs-up"></i>
+                        </div>
+                        <h3>Thoải Mái Tối Đa</h3>
+                        <p>Mỗi đôi giày đều được thiết kế với sự thoải mái là ưu tiên hàng đầu, giúp bạn có thể đi cả ngày mà không cảm thấy mệt mỏi.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-box">
+                        <div class="feature-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h3>Bảo Hành Dài Hạn</h3>
+                        <p>Chúng tôi tự tin về chất lượng sản phẩm và cung cấp chính sách bảo hành dài hạn cho mọi đôi giày.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-box">
+                        <div class="feature-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h3>Giao Hàng Nhanh Chóng</h3>
+                        <p>Hệ thống logistics hiện đại giúp chúng tôi giao hàng đến tay khách hàng một cách nhanh chóng và an toàn.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="600">
+                    <div class="feature-box">
+                        <div class="feature-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3>Hỗ Trợ Khách Hàng 24/7</h3>
+                        <p>Đội ngũ chăm sóc khách hàng của chúng tôi luôn sẵn sàng hỗ trợ bạn mọi lúc, mọi nơi.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Manufacturing Process Section -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Quy Trình Sản Xuất</h2>
+                <p class="lead">Từ ý tưởng đến sản phẩm hoàn thiện</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up">
+                    <div class="process-step">
+                        <div class="process-number">1</div>
+                        <div class="process-connector d-none d-lg-block"></div>
+                        <h3>Thiết Kế</h3>
+                        <p>Đội ngũ thiết kế sáng tạo những mẫu giày độc đáo, kết hợp thời trang và công năng.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="process-step">
+                        <div class="process-number">2</div>
+                        <div class="process-connector d-none d-lg-block"></div>
+                        <h3>Chọn Vật Liệu</h3>
+                        <p>Chúng tôi chỉ sử dụng những vật liệu chất lượng cao, bền bỉ và thân thiện với môi trường.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="process-step">
+                        <div class="process-number">3</div>
+                        <div class="process-connector d-none d-lg-block"></div>
+                        <h3>Sản Xuất</h3>
+                        <p>Quy trình sản xuất chuyên nghiệp với sự kết hợp giữa công nghệ hiện đại và kỹ thuật thủ công.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="600">
+                    <div class="process-step">
+                        <div class="process-number">4</div>
+                        <h3>Kiểm Tra Chất Lượng</h3>
+                        <p>Mỗi đôi giày đều trải qua quy trình kiểm tra nghiêm ngặt trước khi đến tay khách hàng.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Khách Hàng Nói Gì</h2>
+                <p class="lead">Những đánh giá từ khách hàng đã trải nghiệm sản phẩm của chúng tôi</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                    <div class="testimonial-card">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p>"Đây là đôi giày thoải mái nhất mà tôi từng sở hữu. Tôi có thể đi cả ngày mà không cảm thấy mệt mỏi. Chất lượng rất tuyệt vời và thiết kế cũng rất đẹp."</p>
+                        <div class="testimonial-author">
+                            <img src="/placeholder.svg?height=50&width=50" alt="Avatar" class="testimonial-avatar">
+                            <div>
+                                <h5 class="mb-0">Nguyễn Văn A</h5>
+                                <small class="text-muted">Khách hàng thân thiết</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="testimonial-card">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p>"Tôi đã mua nhiều đôi giày từ nhiều thương hiệu khác nhau, nhưng chưa có thương hiệu nào làm tôi hài lòng như thương hiệu này. Giày không chỉ đẹp mà còn rất bền."</p>
+                        <div class="testimonial-author">
+                            <img src="/placeholder.svg?height=50&width=50" alt="Avatar" class="testimonial-avatar">
+                            <div>
+                                <h5 class="mb-0">Trần Thị B</h5>
+                                <small class="text-muted">Khách hàng mới</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="testimonial-card">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <p>"Dịch vụ khách hàng xuất sắc và sản phẩm chất lượng cao. Tôi đặc biệt ấn tượng với độ bền của đôi giày sau hơn một năm sử dụng hàng ngày."</p>
+                        <div class="testimonial-author">
+                            <img src="/placeholder.svg?height=50&width=50" alt="Avatar" class="testimonial-avatar">
+                            <div>
+                                <h5 class="mb-0">Lê Văn C</h5>
+                                <small class="text-muted">Vận động viên</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Con Số Ấn Tượng</h2>
+                <p class="lead">Những thành tựu đáng tự hào của chúng tôi</p>
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-6 mb-4" data-aos="fade-up">
+                    <div class="stats-box">
+                        <div class="stats-number" data-count="50">0</div>
+                        <p>Cửa hàng trên toàn quốc</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stats-box">
+                        <div class="stats-number" data-count="500000">0</div>
+                        <p>Khách hàng hài lòng</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="stats-box">
+                        <div class="stats-number" data-count="100">0</div>
+                        <p>Mẫu giày độc đáo</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-4" data-aos="fade-up" data-aos-delay="600">
+                    <div class="stats-box">
+                        <div class="stats-number" data-count="12">0</div>
+                        <p>Năm kinh nghiệm</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title" data-aos="fade-up">Sẵn sàng trải nghiệm sự khác biệt?</h2>
+            <p class="cta-text" data-aos="fade-up" data-aos-delay="200">Khám phá bộ sưu tập giày mới nhất của chúng tôi và tìm cho mình đôi giày hoàn hảo. Đặt hàng ngay hôm nay để nhận ưu đãi đặc biệt!</p>
+            <a href="#" class="btn btn-primary-custom" data-aos="fade-up" data-aos-delay="400">MUA SẮM NGAY</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+   
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        // Initialize AOS animation
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+        
+        // Counter animation for stats
+        document.addEventListener('DOMContentLoaded', function() {
+            const counters = document.querySelectorAll('.stats-number');
+            const speed = 200;
+            
+            counters.forEach(counter => {
+                const animate = () => {
+                    const value = +counter.getAttribute('data-count');
+                    const data = +counter.innerText;
+                    
+                    const time = value / speed;
+                    if (data < value) {
+                        counter.innerText = Math.ceil(data + time);
+                        setTimeout(animate, 1);
+                    } else {
+                        counter.innerText = value.toLocaleString();
+                    }
+                }
+                
+                // Start counting when element is in viewport
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            animate();
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.5 });
+                
+                observer.observe(counter);
+            });
+        });
+    </script>
+</body>
+</html>

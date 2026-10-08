@@ -1,0 +1,101 @@
+<div class="container mt-3">
+    <div class="col-md-12 ">
+        <h1 class="page-header">Thêm khách hàng</h1>
+    </div>
+    <form name="formKhachHang" ng-submit="themKhachHang()" novalidate class="p-3 border rounded shadow-sm bg-light">
+        <div class="col-md-12 mt-4">
+            <label for="ten" class="form-label">Tên khách hàng</label>
+            <input type="text" id="ten" ng-model="newkhachHang.ten" name="ten" class="form-control"
+                placeholder="Nhập tên khách hàng" minlength="3" maxlength="50" required
+                pattern="^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐàáâãèéêìíòóôõùúăđẠ-ỹ\s]+$">
+            <span
+                ng-show="(formKhachHang.ten.$error.required && formKhachHang.ten.$touched) || (formKhachHang.ten.$error.required && formKhachHang.$submitted)"
+                class="text-danger">Tên khách hàng không được để trống</span>
+            <span class="text-danger"
+                ng-show="formKhachHang.ten.$error.minlength && (formKhachHang.ten.$touched || formKhachHang.$submitted)">
+                Tên khách hàng phải có ít nhất 3 ký tự
+            </span>
+            <span class="text-danger"
+                ng-show="formKhachHang.ten.$error.maxlength && (formKhachHang.ten.$touched || formKhachHang.$submitted)">
+                Tên khách hàng không được vượt quá 50 ký tự
+            </span>
+            <span class="text-danger"
+                ng-show="formKhachHang.ten.$error.pattern && (formKhachHang.ten.$touched || formKhachHang.$submitted)">
+                Tên khách hàng chỉ được chứa chữ cái và khoảng trắng
+            </span>
+        </div>
+        <div class="col-md-12 mt-2">
+            <label for="sdt" class="form-label">Số điện thoại</label>
+            <input type="text" id="sdt" ng-model="newkhachHang.sdt" class="form-control"
+                   placeholder="Nhập số điện thoại" name="sdt"
+                   ng-change="validateSDT()" required
+                   pattern="^(0[1-9]{1}[0-9]{8})$">
+            
+            <!-- Lỗi: Bỏ trống -->
+            <span ng-show="(formKhachHang.sdt.$error.required && formKhachHang.sdt.$touched) || 
+                           (formKhachHang.sdt.$error.required && formKhachHang.$submitted)"
+                  class="text-danger">Số điện thoại không được để trống</span>
+            
+            <!-- Lỗi: Định dạng không hợp lệ -->
+            <span class="text-danger"
+                  ng-show="formKhachHang.sdt.$error.pattern && 
+                           (formKhachHang.sdt.$touched || formKhachHang.$submitted)">
+                Số điện thoại không hợp lệ
+            </span>
+        
+            <!-- Lỗi: Số điện thoại đã tồn tại -->
+            <span class="text-danger"
+                  ng-show="formKhachHang.sdt.$error.duplicateSdt && 
+                           (formKhachHang.sdt.$touched || formKhachHang.$submitted)">
+                Số điện thoại đã tồn tại
+            </span>
+        </div>
+        
+        <div class="row mt-2">
+
+            <div class="col-md-6">
+                <label for="ngaysinh" class="form-label">Ngày sinh</label>
+                <input type="date" id="ngaysinh" ng-model="newkhachHang.ngaysinh" class="form-control" required
+                    name="ngaysinh" ng-change="validateDate()" ng-model-options="{ updateOn: 'blur' }">
+                <span
+                    ng-show="(formKhachHang.ngaysinh.$error.required && formKhachHang.ngaysinh.$touched) || (formKhachHang.ngaysinh.$error.required && formKhachHang.$submitted)"
+                    class="text-danger">Ngày sinh không được để trống</span>
+                <span class="text-danger"
+                    ng-show="formKhachHang.ngaysinh.$error.date && (formKhachHang.ngaysinh.$touched || formKhachHang.$submitted)">
+                    Ngày sinh không hợp lệ
+                </span>
+                <span class="text-danger"
+                    ng-show="formKhachHang.ngaysinh.$error.invalidAge && (formKhachHang.ngaysinh.$touched || formKhachHang.$submitted)">
+                    Tuổi phải từ 10 đến 130
+                </span>
+
+
+            </div>
+            <div class="col-md-6 mt-2">
+                <label class="form-label d-block">Giới tính</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gioitinh" id="gioitinhNam"
+                        ng-model="newkhachHang.gioitinh" ng-value="true" required>
+                    <label class="form-check-label" for="gioitinhNam">Nam</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gioitinh" id="gioitinhNu"
+                        ng-model="newkhachHang.gioitinh" ng-value="false">
+                    <label class="form-check-label" for="gioitinhNu">Nữ</label>
+                </div>
+            </div>
+
+        </div>
+        <div class="d-flex justify-content-center gap-3 mt-5">
+            <a href="#!KhachHang" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Đóng
+            </a>
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-plus"></i> Thêm khách hàng
+            </button>
+        </div>
+    </form>
+
+</div>
+
+

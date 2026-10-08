@@ -1,0 +1,166 @@
+﻿<html>
+<head>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eaeaea;
+            margin-bottom: 25px;
+        }
+
+            .header img {
+                max-width: 150px;
+                margin-bottom: 15px;
+            }
+
+            .header h1 {
+                color: #2e7d32;
+                font-size: 24px;
+                margin: 0;
+            }
+
+        .content {
+            font-size: 15px;
+            color: #555;
+        }
+
+        .order-info {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+            .order-info p {
+                margin: 8px 0;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eaeaea;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background-color: #f1f8e9 !important;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 13px;
+            color: #777;
+            text-align: center;
+            border-top: 1px solid #eaeaea;
+            padding-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white !important;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .highlight {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <div class='header'>
+            <!-- Add your logo here if available -->
+            <!-- <img src="cid:companyLogo" alt="Company Logo"> -->
+            <h1>Cảm ơn bạn đã mua hàng tại cửa hàng chúng tôi!</h1>
+        </div>
+
+        <div class='content'>
+            <p>Xin chào <b class="highlight">{khachhang.Ten}</b>,</p>
+            <p>Chúng tôi rất vui thông báo rằng đơn hàng của bạn đã được đặt thành công và đang được xử lý.</p>
+
+            <div class="order-info">
+                <p><b>Mã đơn hàng:</b> <span class="highlight">{hoadon.Id}</span></p>
+                <p><b>Ngày đặt hàng:</b> {hoadon.Thoigiandathang:dd/MM/yyyy} </p>
+                <p><b>Tổng tiền sản phẩm:</b> {hoadon.Tongtiensanpham:#,##0 VNĐ} </p>
+                <p><b>Số tiền giảm:</b> {hoadon.Tonggiamgia:#,##0 VNĐ}</p>
+                <p><b>Phí vận chuyển:</b> {hoadon.Phivanchuyen:#,##0 VNĐ}</p>
+                <p><b>Tổng thanh toán:</b> <span class="highlight"> {hoadon.Tongtiencantra:#,##0 VNĐ}</span></p>
+            </div>
+
+            <h3>Chi tiết đơn hàng</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Màu</th>
+                        <th>Size</th>
+                        <th>Chất Liệu</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {productListHtml}
+                </tbody>
+            </table>
+
+            <p>Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất để xác nhận đơn hàng. Bạn có thể theo dõi trạng thái đơn hàng trong tài khoản của mình.</p>
+
+            <p>Nếu bạn có bất kỳ câu hỏi nào, đừng ngần ngại liên hệ với chúng tôi.</p>
+
+            <p>Trân trọng,</p>
+            <p><b>Đội ngũ hỗ trợ khách hàng</b></p>
+        </div>
+
+        <div class='footer'>
+            <p>Mọi thắc mắc, vui lòng liên hệ:</p>
+            <p>Hotline: <b>0981961533</b> | Email: support@example.com</p>
+            <p>© {DateTime.Now.Year} T7M. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

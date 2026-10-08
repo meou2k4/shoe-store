@@ -1,0 +1,162 @@
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600&display=swap');
+
+    *,
+    :before,
+    :after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Quicksand', sans-serif;
+    }
+
+    body {
+        font-family: 'Quicksand', sans-serif;
+        background-image: url(./Images/bg.jpg);
+        background-repeat: no-repeat;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    /* FORM */
+    form {
+        width: 380px;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 30px;
+        border-radius: 15px;
+        backdrop-filter: blur(8px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 20px rgba(129, 236, 174, 0.4);
+        text-align: center;
+    }
+
+    /* LOGO */
+    .loginbox-logo {
+        width: 100px;
+        margin: 0 auto 15px;
+    }
+
+    .loginbox-logo img {
+        width: 100%;
+        height: auto;
+    }
+
+    /* TITLE */
+    form h3 {
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #fff;
+    }
+
+    /* INPUT FIELDS */
+    label {
+        display: block;
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+        text-align: left;
+        margin-top: 15px;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        margin-top: 5px;
+        font-size: 14px;
+        border-radius: 5px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(0, 0, 0, 0.2);
+        color: #fff;
+        transition: all 0.3s ease;
+    }
+
+    input:focus {
+        border-color: #80ffaa;
+        background: rgba(0, 0, 0, 0.3);
+        outline: none;
+    }
+
+    ::placeholder {
+        color: #ddd;
+    }
+
+    /* BUTTON */
+    button {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 5px;
+        border: none;
+        background: #62a87c;
+        color: white;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background: #4f8664;
+    }
+
+    /* SOCIAL LOGIN */
+    .social-text {
+        font-size: 14px;
+        margin-top: 15px;
+        color: #fff;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 420px) {
+        form {
+            width: 90%;
+            padding: 20px;
+        }
+    }
+
+    .back-to-login {
+        margin-top: 15px;
+        font-size: 14px;
+    }
+
+    .back-to-login a {
+        color: #80ffaa;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    .back-to-login a:hover {
+        text-decoration: underline;
+    }
+    
+    .error-message {
+        color: #ff6b6b;
+        font-size: 14px;
+        margin-top: 10px;
+        text-align: center;
+    }
+</style>
+
+<form ng-controller="dangnhapController" ng-submit="login()">
+    <div class="loginbox-logo">
+        <img src="/TemplateCustomer/Images/logo.png" alt="Logo">
+    </div>
+    <h3>Đăng Nhập</h3>
+
+    <label for="email">Email</label>
+    <input type="email" placeholder="Email" id="email" ng-model="user.email" required>
+
+    <label for="password">Mật khẩu</label>
+    <input type="password" placeholder="Mật khẩu" id="password" ng-model="user.password" required>
+    
+    <div class="error-message" ng-if="errorMessage">{{errorMessage}}</div>
+    
+    
+    <button type="submit" ng-disabled="isLoading" style="margin-top: 32px;">
+        <span ng-if="!isLoading">Đăng nhập</span>
+        <span ng-if="isLoading">Đang xử lý...</span>
+    </button>
+</form>

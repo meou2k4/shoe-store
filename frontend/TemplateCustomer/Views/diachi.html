@@ -1,0 +1,219 @@
+<style>
+    .btnfunction {
+        color: blue;
+        text-decoration: none;
+    }
+
+    .btnfunction:hover {
+        color: black;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    
+    .profile-card {
+        position: sticky;
+        top: 20px;
+    }
+    
+    .nav-link {
+        padding: 10px 15px;
+        transition: all 0.2s;
+    }
+    
+    .nav-link:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .nav-link.active {
+        background-color: #0d6efd;
+        color: white !important;
+    }
+    
+    .address-card {
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-left: 4px solid #0d6efd;
+    }
+    
+    .address-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .address-card-default {
+        border-left: 4px solid #ffc107;
+    }
+    
+    .address-icon {
+        width: 60px;
+        height: 60px;
+        background-color: #e9f0ff;
+        color: #0d6efd;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    
+    @media (max-width: 768px) {
+        .profile-card {
+            position: static;
+            margin-bottom: 20px;
+        }
+    }
+</style>
+
+<div class="container-fluid py-4 bg-light">
+    <div class="row g-4">
+        <!-- Sidebar Profile -->
+        <div class="col-lg-3">
+            <div class="profile-card p-4 rounded-4 bg-white shadow-sm">
+                <div class="text-center mb-4">
+                    <img src="https://localhost:7196/picture/{{dataTttk.avatar}}"
+                        class="rounded-circle object-fit-cover border border-3 border-white shadow" width="100"
+                        height="100" alt="Profile">
+                    <h5 id="userName" class="mt-3 mb-1 fw-semibold">{{dataTttk.ten}}</h5>
+                    <p id="userRank" class="text-muted small">Thành Viên {{datarank.tenrank}}</p>
+                </div>
+                
+                <nav class="nav flex-column gap-2">
+                    <a class="nav-link rounded-3" href="#!thongtintaikhoan">
+                        <i class="bi bi-person me-2"></i> Hồ sơ
+                    </a>
+                    <a class="nav-link rounded-3 active">
+                        <i class="bi bi-geo-alt me-2"></i> Địa chỉ
+                    </a>
+                    <a class="nav-link rounded-3" href="#!donhangcuaban">
+                        <i class="bi bi-bag me-2"></i> Đơn hàng của bạn
+                    </a>
+                    <a class="nav-link rounded-3" href="#!voucher">
+                        <i class="bi bi-ticket-perforated me-2"></i> Voucher
+                    </a>
+                    <a class="nav-link rounded-3" href="#!doimatkhau">
+                        <i class="bi bi-shield-lock me-2"></i> Đổi mật khẩu
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 p-4 bg-white rounded-4 shadow-sm">
+                <div>
+                    <h4 class="fw-bold mb-1">Địa Chỉ Của Tôi</h4>
+                    <p class="text-muted mb-0">Quản lý địa chỉ giao hàng của bạn</p>
+                </div>
+                <div class="mt-3 mt-md-0">
+                    <button type="button" class="btn btn-danger px-4" data-bs-toggle="modal" data-bs-target="#AddAddressModal">
+                        <i class="bi bi-plus me-2"></i>Thêm địa chỉ mới
+                    </button>
+                </div>
+            </div>
+
+            <!-- Address List -->
+            <div class="row g-4 diachi-list">
+                <!-- Address items will be rendered here -->
+            </div>
+        </div>
+    </div>
+</div>
+<!--Add Address-->
+<div class="modal fade" id="AddAddressModal" tabindex="-1" aria-labelledby="AddAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AddAddressModalLabel">Thêm địa chỉ mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class=" row mb-3">
+                    <div class="col-md">
+                        <input type="text" ng-model="add.tennguoinhan" placeholder="Họ và tên" class="form-control"
+                            id="tennguoinhan">
+                    </div>
+                    <div class="col-md">
+                        <input type="tel" ng-model="add.sdtnguoinhan" placeholder="Số điện thoại" class="form-control"
+                            id="sdtnguoinhan">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <select id="selectTinh" class="form-select">
+                        <option selected value="">Chọn Tỉnh Thành</option>
+                    </select>
+                </div>
+                <div class=" row mb-3">
+                    <div class="col-md">
+                        <select id="selectQuan" class="form-select">
+                            <option selected value="">Chọn Quận Huyện</option>
+                        </select>
+                    </div>
+                    <div class="col-md">
+                        <select id="selectPhuong" class="form-select">
+                            <option selected value="">Chọn Phường Xã</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <input ng-model="add.diachicuthe" type="text" placeholder="Địa chỉ cụ thể" id="detailInput"
+                        class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="btnSaveAddress">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="EditAddressModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cập nhật địa chỉ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="updateAddressId" value="" style="display: none;">
+                <div class=" row mb-3">
+                    <div class="col-md">
+                        <input type="text" ng-model="update.tennguoinhan" placeholder="Họ và tên" class="form-control"
+                            id="updatetennguoinhan">
+                    </div>
+                    <div class="col-md">
+                        <input type="tel" ng-model="update.sdtnguoinhan" placeholder="Số điện thoại" class="form-control"
+                            id="updatesdtnguoinhan">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <select id="updateTinh" class="form-select">
+                        <option selected value="">Chọn Tỉnh Thành</option>
+                    </select>
+                </div>
+                <div class=" row mb-3">
+                    <div class="col-md">
+                        <select id="updateQuan" class="form-select">
+                            <option selected value="">Chọn Quận Huyện</option>
+                        </select>
+                    </div>
+                    <div class="col-md">
+                        <select id="updatePhuong" class="form-select">
+                            <option selected value="">Chọn Phường Xã</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <input ng-model="update.diachicuthe" type="text" placeholder="Địa chỉ cụ thể" id="updatedetailInput"
+                        class="form-control">
+                </div>
+                <div class="mb-3" style="display: none;">
+                    <input ng-model="update.trangthai" type="text" placeholder="Trạng thái" id="updateCondition"
+                        class="form-control" disabled>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="updateForm">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>

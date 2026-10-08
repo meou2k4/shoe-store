@@ -1,0 +1,60 @@
+<!-- Danh sách Thương Hiệu -->
+<div class="container mt-4">
+    <h2>Danh Sách Thương Hiệu</h2>
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addThuongHieuModal" ng-click="resetThuongHieu()">➕Thêm Thương Hiệu</button>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Tên Thương Hiệu</th>
+                <th>Tình Trạng</th>
+                <th>Hành Động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="thuonghieu in thuongHieus">
+                <td>{{ thuonghieu.tenthuonghieu }}</td>
+                <td>
+                    <span class="badge" ng-class="{'bg-success': thuonghieu.tinhtrang === 0, 'bg-secondary': thuonghieu.tinhtrang === 2}">
+                        {{ thuonghieu.tinhtrang === 0 ? '✅ Hoạt động' : '🚫 Ngừng hoạt động' }}
+                    </span>
+                </td>
+                <td>
+                    <button class="btn btn-warning btn-sm" ng-click="editThuongHieu(thuonghieu)" data-bs-toggle="modal" data-bs-target="#addThuongHieuModal">✏️Sửa</button>
+                    <button class="btn btn-danger btn-sm" ng-click="deleteThuongHieu(thuonghieu.id)" ng-if="!thuonghieu.isUsedInProduct">🗑️Xóa</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="addThuongHieuModal" tabindex="-1" aria-labelledby="addThuongHieuModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addThuongHieuModalLabel">{{ editingThuongHieu ? 'Cập Nhật Thương Hiệu' : 'Thêm Thương Hiệu' }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="tenthuonghieu" class="form-label">Tên Thương Hiệu</label>
+                    <input type="text" id="tenthuonghieu" class="form-control" ng-model="newThuongHieu.tenthuonghieu" 
+                    ng-class="{'is-invalid': formError.tenthuonghieu}" 
+                    ng-change="validateThuongHieu()"
+                    placeholder="Nhập tên thương hiệu" required>
+                    <span class="text-danger" ng-show="formError2.tenthuonghieu">{{ formError2.tenthuonghieu }}</span>
+                </div>
+
+                <div class="mb-3 form-check form-switch">
+                    <input type="checkbox" class="form-check-input" ng-model="newThuongHieu.tinhtrang" 
+                        ng-true-value="0" ng-false-value="2">
+                    <label class="form-check-label">Trạng Thái</label>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button class="btn btn-success" ng-click="addThuongHieu()" ng-if="!editingThuongHieu" >Thêm Thương Hiệu</button>
+                <button class="btn btn-warning" ng-click="updateThuongHieu()" ng-if="editingThuongHieu" >Cập Nhật Thương Hiệu</button>
+            </div>
+        </div>
+    </div>
+</div>

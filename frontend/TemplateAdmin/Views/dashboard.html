@@ -1,0 +1,228 @@
+<nav class="navbar navbar-expand-lg navbar-forest mb-4">
+    <div class="container-fluid">
+      <!-- LOGO & BRAND -->
+      <a class="navbar-brand" href="#!dashboard">
+        <img src="Images/logo.png" alt="Logo">
+        My Forest Admin
+      </a>
+  
+      <!-- TOGGLER (MOBILE) -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarForest" aria-controls="navbarForest" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="bi bi-list"></i>
+      </button>
+  
+      <!-- COLLAPSIBLE MENU ITEMS -->
+      <div class="collapse navbar-collapse" id="navbarForest">
+        <!-- Bên phải -->
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+          <!-- Lời chào -->
+          <li class="nav-item">
+            <span class="navbar-text">
+              Xin chào, {{userInfo.hoTen}}
+            </span>
+          </li>
+  
+          <!-- Link trang “Tài khoản” (hoặc “Thông tin Admin”) -->
+          <li class="nav-item">
+            <a class="nav-link" href="#!thongtinAdmin">
+              <i class="bi bi-person-circle"></i> Tài khoản
+            </a>
+          </li>
+  
+          <!-- Nút Đăng xuất -->
+          <li class="nav-item ms-2">
+            <button class="btn btn-danger" ng-click="dangxuat()">
+              <i class="bi bi-box-arrow-right"></i> Đăng xuất
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div ng-controller="dashboardController" class="d-flex" style="min-height: 100vh;">
+   
+    <div class="sidebar">
+        <h4>Admin Panel</h4>
+        <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+                <a class="nav-link" href="#!dashboard">
+                    <i class="bi bi-speedometer2"></i> Thống kê
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link" href="#!nhanvien">
+                    <i class="bi bi-people"></i> Nhân viên
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link" href="#!sanpham">
+                    <i class="bi bi-bag-check"></i> Sản phẩm
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link" href="./Views/hoadonoff.html">
+                    <i class="bi bi-bag-check"></i> Hóa Đơn OFF
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link" href="./Views/banhangtaiquay.html">
+                    <i class="bi bi-bag-check"></i> Quản lý Hóa Đơn OFF
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link" href="#!quanlyhoadon">
+                    <i class="bi bi-file-earmark-text"></i> Hoá đơn
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link" href="./Views/hoadonoff.html">
+                    <i class="bi bi-file-earmark-text"></i> Bán hàng tại quầy
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link" href="#!trahang">
+                    <i class="bi bi-arrow-counterclockwise"></i> Trả hàng
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link" href="#!KhachHang">
+                    <i class="bi bi-person-check"></i> Khách hàng
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link" href="#!Mau">
+                    <i class="bi bi-palette2"></i> Màu
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link" href="#!Size">
+                    <i class="bi bi-palette2"></i> Size
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link" href="#!ChatLieu">
+                    <i class="bi bi-palette2"></i> Chất liệu
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link" href="#!Vocher">
+                    <i class="bi bi-palette2"></i> Giảm Giá
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link" href="#!Rank">
+                    <i class="bi bi-palette2"></i> Rank
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+  <a class="nav-link text-white" href="#!doimatkhau">
+    <i class="bi bi-key"></i> Đổi mật khẩu
+  </a>
+</li>
+        </ul>
+        <button class="btn btn-danger w-100 mt-3" ng-click="dangxuat()">
+            <i class="bi bi-box-arrow-right"></i> Đăng xuất
+        </button>
+    </div>
+
+    <!-- Content -->
+    <div class="dashboard-content">
+        <!-- Thanh tiêu đề trên cùng (Top bar) -->
+        <nav class="navbar navbar-forest mb-4">
+            <div class="container-fluid">
+                <span class="navbar-brand mb-0 h1">
+                    Xin chào, {{userInfo.hoTen}}
+                </span>
+            </div>
+        </nav>
+
+        <!-- Khu vực thống kê -->
+        <div class="row g-3 mb-4 text-center">
+            <div class="col-md-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Nhân viên</h5>
+                        <h2>{{stats.totalEmployees}}</h2>
+                        <p class="card-text">Tổng số nhân viên</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Sản phẩm</h5>
+                        <h2>{{stats.totalProducts}}</h2>
+                        <p class="card-text">Tổng số sản phẩm</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Hóa đơn</h5>
+                        <h2>{{stats.totalOrders}}</h2>
+                        <p class="card-text">Đơn hàng đã tạo</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Doanh thu</h5>
+                        <h2>{{stats.totalRevenue | currency:""}} VND</h2>
+                        <p class="card-text">Tổng doanh thu</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Danh sách đơn hàng mới nhất (chỉ là bảng ví dụ) -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Đơn hàng gần đây</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table mb-0 align-middle">
+                    <thead>
+                        <tr>
+                            <th>Mã đơn</th>
+                            <th>Khách hàng</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="order in recentOrders">
+                            <td>{{order.orderId}}</td>
+                            <td>{{order.customer}}</td>
+                            <td>{{order.total | currency:""}} VND</td>
+                            <td>{{order.status}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card shadow-sm mt-4 row">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">Biểu đồ Doanh thu (Line Chart)</h5>
+            </div>
+            <div class="card-body">
+              <canvas id="chartLine" width="400" height="200"></canvas>
+            </div>
+          </div>
+          
+          <div class="card shadow-sm mt-4 row">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">Biểu đồ Sản phẩm bán ra (Bar Chart)</h5>
+            </div>
+            <div class="card-body">
+              <canvas id="chartBar" width="400" height="200"></canvas>
+            </div>
+          </div>
+        </div>
+    </div>
+    
+</div>
+
+  

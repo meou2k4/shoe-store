@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Xác minh OTP</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 8px;
+      width: 360px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      position: relative;
+      text-align: center;
+    }
+
+    .card h2 {
+      margin-bottom: 15px;
+      font-size: 1.4rem;
+    }
+
+    .card p.instructions {
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+      color: #aaa;
+    }
+
+    .otp-inputs {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .otp-inputs input {
+      width: 45px;
+      height: 45px;
+      font-size: 1.5rem;
+      text-align: center;
+      border: 2px solid #444;
+      border-radius: 4px;
+      background: #1e1e1e;
+      color: #fff;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .otp-inputs input:focus {
+      border-color: #c10c99;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .actions button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+
+    #resendBtn {
+      background: transparent;
+      border: 2px solid #c10c99;
+      color: #c10c99;
+    }
+
+    #resendBtn:hover {
+      background: #c10c99;
+      color: #fff;
+    }
+
+    #verifyBtn {
+      background: #c10c99;
+      color: #fff;
+    }
+
+    #verifyBtn:hover {
+      background: #a10980;
+    }
+
+    .back-link {
+      display: block;
+      margin-top: 15px;
+      color: #aaa;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .back-link:hover {
+      color: #c10c99;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal .modal-content {
+      background: #fff;
+      color: #000;
+      padding: 20px;
+      border-radius: 6px;
+      width: 280px;
+      text-align: center;
+    }
+
+    .modal .modal-content button {
+      margin-top: 15px;
+      padding: 8px 16px;
+      background: #c10c99;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .modal .modal-content button:hover {
+      background: #a10980;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h2>Xác minh OTP</h2>
+    <p class="instructions">Nhập mã 6 chữ số được gửi tới email của bạn</p>
+    <form id="otp-form" autocomplete="off">
+      <div class="otp-inputs">
+        <input type="text" maxlength="1" inputmode="numeric" pattern="\d*" />
+        <input type="text" maxlength="1" inputmode="numeric" pattern="\d*" />
+        <input type="text" maxlength="1" inputmode="numeric" pattern="\d*" />
+        <input type="text" maxlength="1" inputmode="numeric" pattern="\d*" />
+        <input type="text" maxlength="1" inputmode="numeric" pattern="\d*" />
+        <input type="text" maxlength="1" inputmode="numeric" pattern="\d*" />
+      </div>
+      <div class="actions">
+        <button type="button" id="resendBtn">Gửi lại mã</button>
+        <button type="submit" id="verifyBtn">Xác nhận</button>
+      </div>
+    </form>
+    <a href="/login" class="back-link">← Quay lại đăng nhập</a>
+  </div>
+
+  <!-- Modal lỗi -->
+  <div id="error-modal" class="modal">
+    <div class="modal-content">
+      <h3>Lỗi</h3>
+      <p id="error-message"></p>
+      <button onclick="closeModal()">Đóng</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(location.search);
+      const email = params.get('email') || '';
+      let sentOtp = params.get('sentOtp') || '';
+
+      const inputs = Array.from(document.querySelectorAll('.otp-inputs input'));
+      const form = document.getElementById('otp-form');
+      const resendBtn = document.getElementById('resendBtn');
+      const errorModal = document.getElementById('error-modal');
+      const errorMessage = document.getElementById('error-message');
+
+      // Auto-focus và backspace
+      inputs.forEach((input, idx) => {
+        input.addEventListener('input', e => {
+          const val = e.target.value.replace(/\D/g, '');
+          e.target.value = val;
+          if (val && idx < inputs.length - 1) {
+            inputs[idx + 1].focus();
+          }
+        });
+        input.addEventListener('keydown', e => {
+          if (e.key === 'Backspace' && !e.target.value && idx > 0) {
+            inputs[idx - 1].focus();
+          }
+        });
+      });
+
+      function getOtpValue() {
+        return inputs.map(i => i.value).join('');
+      }
+
+      // Gửi lại OTP
+      async function sendOtp() {
+        if (!email) return showError('Email không hợp lệ.');
+        try {
+          const resp = await fetch('https://localhost:7196/api/Nhanviens/send-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          });
+          const data = await resp.json();
+          if (data.success) {
+            sentOtp = data.otp;
+            inputs[0].focus();
+            alert('Mã OTP đã được gửi lại.');
+          } else {
+            showError(data.message || 'Gửi lại thất bại.');
+          }
+        } catch {
+          showError('Không thể kết nối tới server.');
+        }
+      }
+
+      // Xác nhận OTP
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        const otp = getOtpValue();
+        if (otp.length !== 6) {
+          return showError('Vui lòng nhập đủ 6 chữ số.');
+        }
+        if (otp === sentOtp) {
+          const injector = angular.element(document.body).injector();
+          const $location = injector.get('$location');
+          const $rootScope = injector.get('$rootScope');
+          $location.path('/passwordChanging');
+          $rootScope.$apply(); // Quan trọng để AngularJS cập nhật route
+        } else {
+          showError('Mã OTP không chính xác.');
+        }
+      });
+
+
+      resendBtn.addEventListener('click', sendOtp);
+
+      // Hiển thị modal lỗi
+      function showError(msg) {
+        errorMessage.textContent = msg;
+        errorModal.style.display = 'flex';
+      }
+      window.closeModal = () => errorModal.style.display = 'none';
+
+      // Nếu vào thẳng mà chưa có sentOtp thì tự động gửi
+      if (!sentOtp) sendOtp();
+      else inputs[0].focus();
+    });
+  </script>
+</body>
+
+</html>

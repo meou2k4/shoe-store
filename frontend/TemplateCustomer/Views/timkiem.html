@@ -1,0 +1,194 @@
+<!-- Views/timkiem.html -->
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Kết quả tìm kiếm: "{{searchKey}}"</h2>
+
+  <!-- Loading Indicator -->
+  <div ng-if="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Đang tải...</span>
+    </div>
+    <p class="mt-2">Đang tải sản phẩm...</p>
+  </div>
+
+  <!-- Error Message Section -->
+  <div ng-if="errorMessage && !isLoading" class="alert alert-danger text-center">
+    {{errorMessage}}
+  </div>
+
+  <div class="row" ng-if="!isLoading && !errorMessage">
+    <!-- Filter Section -->
+    <div class="col-md-3">
+      <div class="card shadow-sm p-3 mb-4">
+        <h5 class="mb-3"><i class="bi bi-funnel"></i> Bộ lọc tìm kiếm</h5>
+    
+        <!-- Price Filter -->
+        <div class="filter-section mb-4">
+          <h6 class="mb-3">Giá</h6>
+          <div class="form-check mb-2" ng-repeat="option in priceOptions">
+            <input class="form-check-input" type="radio" name="priceRange" 
+                   id="priceOption{{$index}}" ng-model="filters.priceRange" 
+                   ng-value="option.value" ng-change="clearCustomPrice()">
+            <label class="form-check-label" for="priceOption{{$index}}">
+              {{option.label}}
+            </label>
+          </div>
+    
+          <!-- Custom price range -->
+          <div class="mt-3">
+            <label class="form-label">Từ</label>
+            <input type="number" class="form-control mb-2" ng-model="filters.minPrice"
+                   placeholder="Nhập giá thấp nhất" ng-change="clearPriceRange()">
+            <label class="form-label">Đến</label>
+            <input type="number" class="form-control mb-3" ng-model="filters.maxPrice"
+                   placeholder="Nhập giá cao nhất" ng-change="clearPriceRange()">
+          </div>
+        </div>
+    
+        <!-- Brand Filter -->
+        <div class="filter-section mb-4">
+          <h6 class="mb-3">Thương hiệu</h6>
+          <div ng-if="dataThuonghieu && dataThuonghieu.length > 0">
+            <div class="form-check mb-2" ng-repeat="brand in dataThuonghieu | filter:{tinhtrang:0}">
+              <input class="form-check-input" type="checkbox" 
+                     id="brand{{brand.id}}" ng-model="filters.brands[brand.id]">
+              <label class="form-check-label" for="brand{{brand.id}}">
+                {{brand.tenthuonghieu}}
+              </label>
+            </div>
+          </div>
+          <div ng-if="!dataThuonghieu || dataThuonghieu.length === 0" class="text-muted">
+            Đang tải thương hiệu...
+          </div>
+        </div>
+    
+        <!-- Size Filter -->
+        <div class="filter-section mb-4">
+          <h6 class="mb-3">Size</h6>
+          <div ng-if="availableSizes && availableSizes.length > 0">
+            <div class="form-check mb-2" ng-repeat="size in availableSizes">
+              <input class="form-check-input" type="checkbox" id="size{{size.sosize}}" 
+                     ng-model="filters.sizes[size.sosize]">
+              <label class="form-check-label" for="size{{size.sosize}}">
+                {{size.sosize}}
+              </label>
+            </div>
+          </div>
+          <div ng-if="!availableSizes || availableSizes.length === 0" class="text-muted">
+            Đang tải size...
+          </div>
+        </div>
+    
+        <!-- Apply and Reset Buttons -->
+        <button class="btn btn-primary w-100 mb-2" ng-click="applyAllFilters()">Áp dụng</button>
+        <button class="btn btn-secondary w-100" ng-click="resetFilters()">Xóa tất cả</button>
+      </div>
+    </div>
+    
+    <!-- Product List Section -->
+    <div class="col-md-9">
+      <!-- Sort Options -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <span class="me-2">Tìm thấy {{displayResults.length}} sản phẩm</span>
+        </div>
+        <div class="d-flex align-items-center">
+          <label for="sortSelect" class="me-2">Sắp xếp theo:</label>
+          <select id="sortSelect" class="form-select" ng-model="sortOption" ng-change="sortProducts()">
+            <option value="newest">Mới nhất</option>
+            <option value="oldest">Cũ nhất</option>
+            <option value="lowToHigh">Giá: Thấp đến cao</option>
+            <option value="highToLow">Giá: Cao đến thấp</option>
+            <option value="bestseller">Bán chạy nhất</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Product Cards -->
+        <div class="col-md-4 mb-4" ng-repeat="product in getPagedProducts()">
+          <a href="#!SanpDetail/{{product.id}}" style="text-decoration: none;"
+          ng-class="{'disabled-link': product.soluong === 0}">
+              <div class="card rounded-0"
+              ng-class="{'disabled-card': product.soluong === 0}">
+                  <div class="card-img-container">
+                      <div class="discount-badge"
+                          ng-if="product.giaTriGiam > 0 && product.giaTriGiam <= 100">
+                          -{{product.giaTriGiam}}%</div>
+                      <div class="discount-badge"
+                          ng-if="product.giaTriGiam > 0 && product.giaTriGiam > 100">
+                          -{{product.giaTriGiam| number : 0}}VNĐ</div>
+                      <img ng-src="{{product.hinhAnh}}" alt="Ảnh sản phẩm" height="300px"
+                          class="card-img-top rounded-0" alt="...">
+                  </div>
+                  <div class="card-body">
+
+                      <h5 class="card-title">{{product.tensp}}</h5>
+                      <div class="d-flex justify-content-between">
+                          <!-- Nếu có giảm giá thì hiển thị giá gốc gạch ngang -->
+                          <div class="p-2 text-decoration-line-through text-start "
+                              ng-if="product.giaban > product.giasale && product.giasale !== product.giaban">
+                              {{product.giaban| number : 0}}VNĐ
+                          </div>
+                          <div class="p-2 text-end text-danger fw-bold ms-auto"
+                              ng-if="product.giasale === product.giaban">
+                              {{product.giaban| number : 0}}VNĐ
+                          </div>
+                          <!-- Hiển thị giá sale nếu có giảm giá -->
+                          <div class="p-2 text-end text-danger fw-bold"
+                              ng-if="product.giaban > product.giasale && product.giasale !== product.giaban">
+                              {{product.giasale| number : 0}}VNĐ
+                          </div>
+                      </div>
+
+                      <div class="d-flex justify-content-between">
+                          <div class="p-2 text-decoration-line-through text-start text-danger"><i
+                                  class="bi bi-heart-fill"></i></div>
+                          <div class="p-2 text-end" style="font-size: 12px;">
+                              <div class="d-flex align-items-center justify-content-between">
+                                  <div class="rating-stars">
+                                      <span ng-repeat="star in generateStars(product.trungBinhDanhGia) track by $index">
+                                          <i class="bi" ng-class="{
+                                                 'bi-star-fill text-warning': star === 'full',
+                                                 'bi-star-half text-warning': star === 'half',
+                                                 'bi-star text-muted': star === 'empty'
+                                             }">
+                                          </i>
+                                      </span>
+                                  </div>
+                                  <div class="ms-2">
+                                      <i>{{ getTotalSPCT(product) }} đã bán</i>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </a>
+      </div>
+      </div>
+      
+      <!-- Pagination -->
+      <nav aria-label="Page navigation" class="mt-4" ng-if="totalPages > 1">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" ng-class="{'disabled': currentPage === 1}">
+            <a class="page-link" href="#" ng-click="previousPage()">Trước</a>
+          </li>
+          <li class="page-item" ng-repeat="page in [] | range:totalPages" 
+              ng-class="{'active': page === currentPage}">
+            <a class="page-link" href="#" ng-click="goToPage(page)">{{page}}</a>
+          </li>
+          <li class="page-item" ng-class="{'disabled': currentPage === totalPages}">
+            <a class="page-link" href="#" ng-click="nextPage()">Sau</a>
+          </li>
+        </ul>
+      </nav>
+      
+      <!-- No Results Message -->
+      <div ng-if="displayResults.length === 0" class="text-center text-danger mt-5 p-5 border rounded">
+        <i class="bi bi-search" style="font-size: 3rem;"></i>
+        <p class="mt-3">Không tìm thấy kết quả nào phù hợp với "{{searchKey}}"</p>
+        <p>Vui lòng thử lại với từ khóa khác hoặc điều chỉnh bộ lọc.</p>
+      </div>
+    </div>
+  </div>
+</div>

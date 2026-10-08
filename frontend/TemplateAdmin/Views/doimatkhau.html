@@ -1,0 +1,48 @@
+<div class="container py-5" ng-controller="doimatkhauController">
+    <h2 class="mb-4">Đổi Mật Khẩu Admin</h2>
+
+    <!-- Thông báo lỗi / thành công -->
+    <div class="alert alert-danger" ng-if="errorMessage">
+        {{errorMessage}}
+    </div>
+    <div class="alert alert-success" ng-if="successMessage">
+        {{successMessage}}
+    </div>
+
+    <form ng-submit="updatePassword()" novalidate>
+        <div class="mb-3">
+            <label for="oldPassword" class="form-label">Mật khẩu cũ</label>
+            <input 
+                type="password" 
+                class="form-control" 
+                id="oldPassword" 
+                placeholder="Nhập mật khẩu cũ" 
+                ng-model="formData.oldPassword"
+                required>
+        </div>
+
+        <div class="mb-3">
+            <label for="newPassword" class="form-label">Mật khẩu mới</label>
+            <input 
+                type="password" 
+                class="form-control" 
+                id="newPassword" 
+                placeholder="Nhập mật khẩu mới" 
+                ng-model="formData.newPassword"
+                required>
+        </div>
+
+        <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Xác nhận mật khẩu mới</label>
+            <input 
+                type="password" 
+                class="form-control" 
+                id="confirmPassword" 
+                placeholder="Nhập lại mật khẩu mới" 
+                ng-model="formData.confirmPassword"
+                required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Cập nhật mật khẩu</button>
+    </form>
+</div>

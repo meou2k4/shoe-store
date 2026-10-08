@@ -1,0 +1,27 @@
+<div class="container d-flex justify-content-center align-items-center" style="height: 100vh; " ng-controller="doimatkhau2">
+    <div class="col-md-5 p-5 rounded-4 text-center" style="background: #1e1e1e; box-shadow: 8px 8px 16px #0a0a0a, -8px -8px 16px #292929;">
+        <h2 class="mb-4 text-white fw-bold">🔐 Đặt lại mật khẩu</h2>
+        <form id="resetPasswordForm" ng-submit="submitPasswordReset()">
+            <div class="mb-4">
+                <label for="newPassword" class="form-label text-white-50 fw-semibold">Mật khẩu mới</label>
+                <input type="password" class="form-control rounded-pill px-3 py-2 border-0 text-white" id="newPassword" ng-model="passwordData.newPassword" required 
+                       style="background: #1e1e1e; box-shadow: inset 4px 4px 8px #0a0a0a, inset -4px -4px 8px #292929; color: white;">
+                <small class="text-danger d-block mt-1" ng-show="errorMessages.newPassword">{{errorMessages.newPassword}}</small>
+            </div>
+            <div class="mb-4">
+                <label for="confirmPassword" class="form-label text-white-50 fw-semibold">Xác nhận mật khẩu mới</label>
+                <input type="password" class="form-control rounded-pill px-3 py-2 border-0 text-white" id="confirmPassword" ng-model="passwordData.confirmPassword" required 
+                       style="background: #1e1e1e; box-shadow: inset 4px 4px 8px #0a0a0a, inset -4px -4px 8px #292929; color: white;">
+                <small class="text-danger d-block mt-1" ng-show="errorMessages.confirmPassword">{{errorMessages.confirmPassword}}</small>
+            </div>
+            <button type="submit" class="btn w-100 fw-bold py-2 rounded-pill" 
+                    style="background: linear-gradient(145deg, #222, #1a1a1a); color: white; box-shadow: 4px 4px 8px #0a0a0a, -4px -4px 8px #292929; transition: 0.3s;">
+                Đặt lại mật khẩu
+            </button>
+            <div class="mt-3">
+                <small class="text-success" ng-show="successMessage">{{successMessage}}</small>
+                <small class="text-danger" ng-show="generalErrorMessage">{{generalErrorMessage}}</small>
+            </div>
+        </form>
+    </div>
+</div>

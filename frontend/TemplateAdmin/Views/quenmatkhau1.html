@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quên mật khẩu</title>
+  <style>
+    body { font-family: Arial; display:flex; justify-content:center; align-items:center; height:100vh; background:#f0f0f0; }
+    .card { padding:20px; background:#fff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); width:320px; }
+    input, button { width:100%; padding:10px; margin-top:10px; }
+    button { background:#c10c99; color:#fff; border:none; cursor:pointer; }
+    button:hover { background:#a10980; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Quên mật khẩu</h2>
+    <form id="forgot-form">
+      <input id="email" type="email" placeholder="Nhập email của bạn" required />
+      <button type="submit">Gửi mã OTP</button>
+    </form>
+    <p id="msg" style="color:red; font-size:14px; margin-top:10px;"></p>
+  </div>
+
+  <script>
+    document.getElementById('forgot-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const msgEl = document.getElementById('msg');
+      msgEl.textContent = '';
+
+      try {
+        const resp = await fetch('https://localhost:7196/api/Nhanviens/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await resp.json();
+        if (data.success) {
+          // truyền email và mã OTP sang trang verify
+          window.location.href = `Views/verify-otp.html?email=${encodeURIComponent(email)}`;
+        } else {
+          msgEl.textContent = data.message || 'Gửi mã thất bại.';
+        }
+      } catch (err) {
+        console.error(err);
+        msgEl.textContent = 'Không thể kết nối tới server.';
+      }
+    });
+  </script>
+</body>
+</html>

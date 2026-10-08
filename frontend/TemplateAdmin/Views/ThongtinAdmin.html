@@ -1,0 +1,183 @@
+<!-- CSS giữ nguyên -->
+<style>
+    .profile-image {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .profile-image-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .profile-image-edit {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background-color: #f8f9fa;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #dee2e6;
+        cursor: pointer;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="d-flex align-items-center mb-4">
+        <a href="index.html" class="btn btn-outline-secondary me-2">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <h1 class="mb-0">Thông tin Admin</h1>
+    </div>
+
+    <div class="row g-4">
+        <!-- BÊN TRÁI: Thông tin chỉ xem -->
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Thông tin cá nhân</h5>
+                </div>
+                <div class="card-body d-flex flex-column align-items-center">
+                    <div class="profile-image-container mb-3">
+                        <img src="" class="profile-image" id="thongtinanh" />
+                    
+                        <!-- File input ẩn -->
+                        <input type="file" id="avatarInput" style="display: none;" accept="image/*"
+                               onchange="angular.element(this).scope().onImageChange(this.files)" />
+                    
+                        <!-- Nút mở chọn file -->
+                        <div class="profile-image-edit" ng-click="triggerFileInput()">
+                            <i class="bi bi-camera"></i>
+                        </div>
+                    </div>                    
+                    
+                    <h4 class="mb-1">{{thongtin.hovaten}}</h4>
+        
+                    <div class="w-100 mt-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-envelope text-muted me-2"></i>
+                            <span>Email: {{thongtin.email}}</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-telephone text-muted me-2"></i>
+                            <span>SĐT: {{thongtin.sdt}}</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-calendar-event text-muted me-2"></i>
+                            <span>Ngày tham gia: {{thongtin.ngaytaotaikhoan | date:'dd/MM/yyyy'}}</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-shield-check text-muted me-2"></i>
+                            <span>Vai trò: {{thongtin.role == 0 ? 'Admin' : (thongtin.role == 1 ? 'Quản lí' : 'Nhân viên')}}</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-check-circle text-muted me-2"></i>
+                            <span>Trạng thái: 
+                                {{
+                                    thongtin.trangthai == 0 ? 'Đang hoạt động' :
+                                    (thongtin.trangthai == 1 ? 'Dừng hoạt động' :
+                                    'Khoá tài khoản')
+                                }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BÊN PHẢI: Cài đặt thông tin cá nhân -->
+        <div class="col-md-8">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Cài đặt tài khoản</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs" id="accountTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="personal-tab" data-bs-toggle="tab"
+                                data-bs-target="#personal" type="button" role="tab" aria-controls="personal"
+                                aria-selected="true">
+                                Thông tin cá nhân
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security"
+                                type="button" role="tab" aria-controls="security" aria-selected="false">
+                                Bảo mật
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content pt-4" id="accountTabsContent">
+                        <!-- Thông tin cá nhân -->
+                        <div class="tab-pane fade show active" id="personal" role="tabpanel"
+                            aria-labelledby="personal-tab">
+                            <form id="personalInfoForm">
+                                <div class="row mb-3">
+                                    <div class="col-12 mb-3">
+                                        <label for="ten">Họ và Tên</label>
+                                        <input type="text" class="form-control" id="ten" ng-model="thongtin.hovaten">
+                                    </div>
+                                
+                                    <div class="col-md-6 mb-3">
+                                        <label for="gender" class="form-label">Giới tính</label>
+                                        <select class="form-select" id="gender" ng-model="thongtin.gioitinh">
+                                          <option ng-value="true">Nam</option>
+                                          <option ng-value="false">Nữ</option>
+                                        </select>
+                                      </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="dob" class="form-label">Ngày sinh</label>
+                                        <input type="date" class="form-control" id="dob" ng-model="thongtin.ngaysinh">
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" ng-model="thongtin.email">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="phone" class="form-label">Số điện thoại</label>
+                                        <input type="text" class="form-control" id="phone" ng-model="thongtin.sdt">
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <label for="address" class="form-label">Địa chỉ</label>
+                                        <input type="text" class="form-control" id="address"
+                                        ng-model="thongtin.diachi">
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="savePersonalInfoBtn" ng-click="updateProfile()" >Lưu thay đổi</button>
+                            </form>
+                        </div>
+
+                        <!-- Bảo mật -->
+                        <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="security-tab">
+                            <form id="securityForm">
+                                <div class="mb-3">
+                                    <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
+                                    <input type="password" class="form-control" id="currentPassword">
+                                </div>
+                                <hr>
+                                <div class="mb-3">
+                                    <label for="newPassword" class="form-label">Mật khẩu mới</label>
+                                    <input type="password" class="form-control" id="newPassword">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="confirmPassword" class="form-label">Xác nhận mật khẩu mới</label>
+                                    <input type="password" class="form-control" id="confirmPassword">
+                                </div>
+                                <button type="button" class="btn btn-primary" id="updatePasswordBtn" ng-click="updatePasswordBtn()">Cập nhật mật khẩu</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>  

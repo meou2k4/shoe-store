@@ -1,0 +1,191 @@
+<style>
+  
+  #muaHangBtn {
+    position: relative;
+    min-width: 120px;
+}
+
+.spinner-border {
+    margin-left: 8px;
+    vertical-align: middle;
+}
+  #voucher-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: stretch; /* Giãn chiều cao đồng đều */
+    gap: 10px; /* Khoảng cách giữa các thẻ */
+}
+
+.voucher-card {
+    width: 100%; /* Chiếm toàn bộ chiều rộng */
+    max-width: 400px; /* Giới hạn tối đa nếu cần */
+    min-height: 150px; /* Đảm bảo đủ chiều cao */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Căn giữa nội dung */
+    text-align: center;
+    padding: 15px;
+    border: 2px solid #007bff; /* Viền màu xanh */
+    border-radius: 10px; /* Bo góc */
+    background-color: #f8f9fa; /* Màu nền */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng */
+}
+
+.voucher-card h5 {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.voucher-card p {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+</style>
+
+<div class="container">
+  <!-- Địa chỉ nhận hàng -->
+  <div class="border rounded p-3" style="background-color: rgb(233, 232, 232);">
+    <h5 class="fw-bold mb-2 text-danger" style="margin-left: 15px;">Địa Chỉ Nhận Hàng</h5>
+    <div class="d-flex justify-content-between align-items-center">
+      <div style="margin-left: 15px;">
+        <span id="hovaten" class="fw-bold">...</span> -
+        <span id="sdt">...</span><br>
+        <span id="diachi">...</span>
+        <span class="badge bg-primary-subtle text-success border border-success me-2">Mặc định</span>
+      </div>
+      <div>
+        <a data-bs-toggle="modal" class="btn btn-outline-secondary" data-bs-target="#exampleModal">Thay Đổi</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sản phẩm -->
+  <div class="border rounded p-3 my-3" style="background-color: rgb(233, 232, 232);">
+    <div class="d-flex justify-content-between align-items-center">
+      <div style="width: 50%;">
+        <span class="fw-bold" style="margin-left: 15px;">Sản Phẩm</span>
+      </div>
+      <div class="d-flex justify-content-between text-center" style="width: 50%;">
+        <span class="fw-bold" style="width: 50%;">Đơn Giá</span>
+        <span class="fw-bold" style="width: 15%;">Số Lượng</span>
+        <span class="fw-bold" style="width: 35%;">Số Tiền</span>
+      </div>
+    </div>
+
+    <div class="product-list"></div>
+  </div>
+  <div class="border rounded p-3 mb-4">
+    <h5 class="fw-bold">Phương Thức Thanh Toán</h5>
+    <div id="payment-methods-container" class="btn-group d-flex justify-content-center" role="group">
+      <!-- Phương thức thanh toán sẽ được thêm ở đây bằng JavaScript -->
+    </div>
+    <form id="hidden-form" method="post"></form>
+  </div>
+  <!-- Tính toán và tổng tiền -->
+  <div class="container mt-3 border pt-3 rounded">
+    <!-- Voucher and Shopee Coin -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="d-flex align-items-center ms-auto">
+        <span class="fw-bold">Voucher</span>
+        <!-- Sử dụng div để hiển thị thông tin voucher và có giá trị trong data-* -->
+        <div id="voucherCodeDisplay" class="form-control mx-3" data-voucher-code="" placeholder="Nhập mã giảm giá">
+          Chưa chọn voucher
+        </div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVoucherButton">
+          Chọn Voucher
+        </button>
+      </div>
+    </div>
+
+    <!-- Total Invoice Section -->
+    <div class="d-flex justify-content-between align-items-right mb-3">
+      <div class="fw-bold">Tổng sản phẩm</div>
+      <div id="tongSanPham">0 VNĐ</div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="fw-bold">Số tiền giảm giá</div>
+      <div id="soTienGiamGia">0 VNĐ</div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="fw-bold">Phí vận chuyển</div>
+      <div id="phiVanCHuyen">0 VNĐ</div>
+    </div>
+    <div class="mb-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="fw-bold">Điểm sử dụng</div>
+        <div class="form-check d-flex align-items-center gap-3">
+          <span id="diemSuDungHienThi"></span>
+          <span id="diemsudung">0</span> <!-- Điểm sử dụng -->
+          <input class="form-check-input" type="checkbox" id="diemsudungcheckbox" style="margin: auto;" />
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center border-top pt-3 mb-3">
+      <div class="fw-bold fs-5">Tổng hóa đơn</div>
+      <div class="text-danger fw-bold fs-5" id="tongHoaDon">0 VND</div>
+    </div>
+
+    <!-- Checkout Button -->
+    <div class="text-end">
+      <button class="btn btn-danger btn-lg" id="muaHangBtn">
+        <span id="btnText">Mua Hàng</span>
+        <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</div>
+<!-- Modal Địa Chỉ -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Thay đổi địa chỉ</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Tùy chọn chọn địa chỉ hoặc thêm mới -->
+        <div class="mb-3">
+          <label for="addressSelect" class="form-label">Chọn Địa Chỉ</label>
+          <select class="form-select" id="addressSelect">
+            <!-- Các tùy chọn sẽ được thêm bằng JavaScript -->
+          </select>
+        </div>
+        <p class="d-inline-flex gap-1">
+          <a class="btn btn-primary" data-bs-toggle="collapse" role="button" aria-expanded="false"
+            aria-controls="collapseExample" id="AddNewAddressExample">
+            Cập Nhật Địa Chỉ
+          </a>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="btnRestoreAddress" style="display: none;">Khôi phục</button>
+        <button type="button" class="btn btn-primary" id="btnSaveAddress">Lưu</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Voucher -->
+<div class="modal fade" id="addVoucherButton" tabindex="-1" aria-labelledby="addVoucherLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addVoucherLabel">Chọn Voucher</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Phần thông báo không có voucher -->
+        <div id="voucher-notice" class="alert alert-info" style="display: none;">Tài khoản không có voucher.</div>
+
+        <!-- Danh sách các voucher sẽ được thêm vào đây -->
+        <div id="voucher-list"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="btnRestoreVoucher" style="display: none;">Huỷ
+          Voucher</button>
+        <button type="button" class="btn btn-primary" id="btnAddVoucher" data-bs-dismiss="modal">Xác Nhận</button>
+      </div>
+    </div>
+  </div>
+</div>

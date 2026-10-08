@@ -1,0 +1,76 @@
+<div class="container">
+  <div class="card my-3">
+    <div class="d-flex justify-content-between p-2 mt-2">
+      <button class="btn btn-sm btn-outline-secondary me-2" onclick="history.back()">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+      <h5>DANH SÁCH KHÁCH HÀNG</h5>
+      <span>{{ time }}</span>
+    </div>
+  </div>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <a class="btn btn-primary" href="#!addKhachHang"><i class="fa-solid fa-plus"></i> Thêm khách hàng</a>
+            </div>
+            <div class="col-md-6 text-end">
+                <input type="text" ng-model="searchText" placeholder="Tìm kiếm bằng SĐT..." class="form-control" style="width: 300px; display: inline-block;">
+            </div>
+        </div>
+    </div>
+
+    <hr class="mt-3 mb-2">
+    
+    <table class="table table-bordered  table-hover mt-3">
+        <thead class="table-light">
+            <tr>
+                <th>STT</th>
+                <th>Avatar</th>
+                <th>Tên khách hàng</th>
+                <th>Số điện thoại</th>
+                <th>Ngày sinh</th>
+                <th>Giới tính</th>
+                <th>Rank</th>
+                <th>Ngày thêm</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="kh in khachHangs | filter:searchText">
+                <td>{{$index + 1}}</td>
+                <td style="text-align: center; vertical-align: middle;"><img ng-src="https://localhost:7196/picture/{{kh.avatar}}" alt="Avatar" class="img-fluid" style="width: 60px; height: 60px;"></td>
+                <td>{{kh.ten}}</td>
+                <td>{{kh.sdt}}</td>
+                <td>{{kh.ngaysinh | date:'dd/MM/yyyy'}}</td>
+                <td>
+                <span ng-if="kh.gioitinh == true">Nam</span>
+                <span ng-if="kh.gioitinh == false">Nữ</span>
+                </td>
+                <td ng-repeat="value in Ranks" ng-if=" kh.idrank == value.id">{{value.tenrank}}</td>
+                <td>{{kh.ngaytaotaikhoan | date: 'dd/MM/yyyy'}}</td>
+                <td>
+                    <span class="badge bg-success" ng-if="kh.trangthai === 'Hoạt động'">{{kh.trangthai}}</span>
+                    <span class="badge bg-secondary" ng-if="kh.trangthai === 'Tài khoản bị khoá'">{{kh.trangthai}}</span>
+                  </td>
+                  
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <a class="btn btn-warning" href="#!/editKhachHang/{{kh.id}}"> 
+                        <i class="fa-solid fa-pen-to-square"></i>
+                      </a>
+                      <button class="btn btn-danger" ng-click="deleteKhachHang(kh.id)">
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                     
+                    </div>
+                  </td>
+                  
+
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
